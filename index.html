@@ -19,23 +19,36 @@
 
     <main class="flex flex-col lg:flex-row h-[calc(100vh-65px)] overflow-hidden">
         <div class="flex-1 bg-black flex flex-col justify-center items-center p-4">
-      <!-- ওপরে নতুন বাংলা লেখা যোগ করার কোড -->
-      <div class="text-center mb-6 px-4">
-        <h2 class="text-xl md:text-3xl font-bold text-white drop-shadow-md">
-          স্বাগতম সিয়ামের লাইভ টিভি প্ল্যাটফর্মে! 📺
-        </h2>
-        <p class="text-xs md:text-sm text-gray-400 mt-2 font-medium tracking-wide">
-          বাফারিং ছাড়া একদম ফুল এইচডি-তে লাইভ খেলা ও বিনোদন উপভোগ করুন।
-        </p>
-      </div>
+            <!-- ওপরে নতুন বাংলা লেখা যোগ করার কোড -->
+            <div class="text-center mb-6 px-4">
+                <h2 class="text-xl md:text-3xl font-bold text-white drop-shadow-md">
+                    স্বাগতম সিয়ামের লাইভ টিভি প্ল্যাটফর্মে! 📺
+                </h2>
+                <p class="text-xs md:text-sm text-gray-400 mt-2 font-medium tracking-wide">
+                    বাফারিং ছাড়া একদম ফুল এইচডি-তে লাইভ খেলা ও বিনোদন উপভোগ করুন।
+                </p>
+            </div>
 
-      <div class="w-full max-w-4xl aspect-video bg-zinc-900 rounded-lg overflow-hidden shadow-2xl border border-zinc-800">
-        <video id="iptv-player" class="w-full h-full" controls autoplay></video>
-      </div>
-      <p id="now-playing" class="mt-3 text-gray-400 font-semibold text-lg">Select a Channel to Play</p>
-    </div>
+            <div class="w-full max-w-4xl aspect-video bg-zinc-900 rounded-lg overflow-hidden shadow-2xl border border-zinc-800">
+                <video id="iptv-player" class="w-full h-full" controls autoplay></video>
+            </div>
+            <p id="now-playing" class="mt-3 text-gray-400 font-semibold text-lg">Select a Channel to Play</p>
+        </div>
 
         <div class="w-full lg:w-96 bg-[#161b22] border-t lg:border-t-0 lg:border-l border-gray-800 flex flex-col h-full">
+            
+            <!-- রিয়েল-টাইম লাইভ ইউজার কাউন্টার বক্স -->
+            <div class="p-3 border-b border-gray-800 flex justify-between items-center bg-zinc-900/40">
+                <span class="text-sm font-semibold text-gray-300 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    এই মুহূর্তে লাইভ দেখছেন:
+                </span>
+                <!-- ফ্রি কাউন্টার উইজেট -->
+                <div class="bg-zinc-800 px-2.5 py-1 rounded text-sm font-bold text-green-400 border border-zinc-700">
+                    <script type="text/javascript" src="//counter.websiteout.net/js/5/0/0/1"></script>
+                </div>
+            </div>
+
             <div class="p-3 border-b border-gray-800 flex gap-1.5 overflow-x-auto text-xs">
                 <button onclick="filterCategory('All')" class="bg-red-600 px-3 py-1.5 rounded-md font-bold cursor-pointer">All Channels</button>
                 <button onclick="filterCategory('Sports')" class="bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-md font-medium cursor-pointer">Sports</button>
@@ -53,6 +66,7 @@
 
     <script>
         let allChannels = [];
+        let currentCategory = 'All';
         const videoElement = document.getElementById('iptv-player');
         let hlsInstance = null;
 
@@ -67,6 +81,12 @@
         function renderList(channels) {
             const listContainer = document.getElementById('channel-list');
             listContainer.innerHTML = '';
+            
+            if (channels.length === 0) {
+                listContainer.innerHTML = '<p class="text-gray-500 text-sm text-center mt-4">No channels found</p>';
+                return;
+            }
+
             channels.forEach((ch, index) => {
                 listContainer.innerHTML += `
                     <div onclick="playChannel('${ch.url}', '${ch.name}')" class="flex items-center gap-3 p-2 bg-[#0d1117] hover:bg-zinc-900 border border-gray-800 rounded-md cursor-pointer transition-all">
@@ -91,17 +111,21 @@
         }
 
         function filterCategory(cat) {
-            if(cat === 'All') renderList(allChannels);
-            else {
-                const filtered = allChannels.filter(ch => ch.category === cat);
-                renderList(filtered);
-            }
+            currentCategory = cat;
+            applyCombinedFilter();
         }
 
-        // Search Engine Logic
         function searchChannels() {
+            applyCombinedFilter();
+        }
+
+        function applyCombinedFilter() {
             const query = document.getElementById('search-box').value.toLowerCase();
-            const filtered = allChannels.filter(ch => ch.name.toLowerCase().includes(query));
+            const filtered = allChannels.filter(ch => {
+                const matchesCategory = (currentCategory === 'All' || ch.category === currentCategory);
+                const matchesSearch = ch.name.toLowerCase().includes(query);
+                return matchesCategory && matchesSearch;
+            });
             renderList(filtered);
         }
     </script>
