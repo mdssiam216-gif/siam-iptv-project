@@ -66,7 +66,7 @@
 
         <!-- ================= [ ১. লাইভ টিভি পেজ সেকশন ] ================= -->
         <main id="tv-page-section" class="flex flex-col lg:flex-row flex-1 overflow-hidden">
-            <!-- বামদিকের মেইন প্লেয়ার অংশ -->
+            <!-- বামদিকের মেইন প্লেয়ার অংশ -->
             <div id="video-section" class="flex-1 bg-black flex flex-col justify-center items-center p-4 overflow-y-auto lg:overflow-hidden">
                 <div class="text-center mb-4 md:mb-6 px-4">
                     <h2 id="theme-title" class="text-xl md:text-3xl font-bold text-white drop-shadow-md">
@@ -120,9 +120,9 @@
             </div>
         </main>
 
-        <!-- ================= [ ২. ডেডিকেটেড মুভি থিয়েটার পেজ সেکশন ] ================= -->
+        <!-- ================= [ ২. ডেডিকেটেড মুভি থিয়েটার পেজ সেকশন ] ================= -->
         <main id="movie-page-section" class="hidden flex-1 flex flex-col p-4 md:p-6 overflow-y-auto max-w-7xl w-full mx-auto">
-            <!-- বড় মুভি প্লেয়ার (যখন কোনো মুভি প্লে করা হবে তখন এটি ওপেন হবে) -->
+            <!-- বড় মুভি প্লেয়ার (যখন কোনো মুভি প্লে করা হবে তখন এটি ওপেন হবে) -->
             <div id="movie-theater-player-container" class="hidden mb-8 w-full bg-black rounded-xl overflow-hidden shadow-2xl border border-zinc-800 p-2">
                 <div class="flex justify-between items-center p-2 text-sm">
                     <span id="movie-playing-title" class="font-bold text-red-500">🎬 Now Playing: Movie Name</span>
@@ -137,16 +137,16 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-800 pb-4">
                 <div>
                     <h2 class="text-2xl font-bold tracking-wide text-white">🍿 সিয়ামের মুভি গ্যালারি (Movie Theater)</h2>
-                    <p class="text-xs text-gray-400 mt-1">আপনার পছন্দের যেকোনো মুভি যখন খুশি তখন ওয়ান-ক্লিক প্লে করে উপভোগ করুন।</p>
+                    <p class="text-xs text-gray-400 mt-1">আপনার পছন্দের যেকোনো মুভি যখন খুশি তখন ওয়ান-ক্লিক প্লে করে উপভোগ করুন।</p>
                 </div>
                 <div class="w-full md:w-72">
                     <input type="text" id="movie-search-box" oninput="renderMovieGrid()" placeholder="Search movies by name..." class="w-full bg-[#161b22] border border-gray-800 rounded-md p-2 text-sm text-white focus:outline-none focus:border-red-500">
                 </div>
             </div>
 
-            <!-- নেটফ্লিক্স স্টাইল মুভি গ্রিড (এখানে সব মুভি আপলোড হয়ে থাকবে) -->
+            <!-- নেটফ্লিক্স স্টাইল মুভি গ্রিড (এখানে সব মুভি আপলোড হয়ে থাকবে) -->
             <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-                <!-- মুভিগুলো জাভাস্ক্রিপ্ট দিয়ে এখানে লোড হবে -->
+                <!-- মুভিগুলো জাভাস্ক্রিপ্ট দিয়ে এখানে লোড হবে -->
             </div>
         </main>
 
@@ -219,7 +219,7 @@
             const tvSection = document.getElementById('tv-page-section');
             const movieSection = document.getElementById('movie-page-section');
 
-            // টিভি প্লেয়ার এবং মুভি প্লেয়ার দুটোই বন্ধ বা পজ করে দেওয়া সেফটি হিসেবে
+            // টিভি প্লেয়ার এবং মুভি প্লেয়ার দুটোই বন্ধ বা পজ করে দেওয়া সেফটি হিসেবে
             tvVideoElement.pause();
             movieVideoElement.pause();
 
@@ -384,7 +384,7 @@
             const finalMovies = movies.filter(m => m.name.toLowerCase().includes(query));
 
             if (finalMovies.length === 0) {
-                movieGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 text-sm p-8">😔 কোনো মুভি পাওয়া যায়নি ভাই! আপনার channels.json ফাইলে মুভি যুক্ত করুন।</div>';
+                movieGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 text-sm p-8">😔 কোনো মুভি পাওয়া যায়নি ভাই! আপনার channels.json ফাইলে মুভি যুক্ত করুন।</div>';
                 return;
             }
 
@@ -430,7 +430,7 @@
             }
         }
 
-        // 🍿 মুভি প্লে করার ফাংশن
+        // 🍿 মুভি প্লে করার আপডেটেড ফাংশন (MP4 ও CORS সাপোর্ট সহ)
         function playMovie(url, name) {
             const playerContainer = document.getElementById('movie-theater-player-container');
             const playingTitle = document.getElementById('movie-playing-title');
@@ -438,22 +438,51 @@
             playerContainer.classList.remove('hidden');
             playingTitle.innerText = "🎬 Now Playing: " + name;
 
-            if (Hls.isSupported()) {
-                if (hlsMovieInstance) hlsMovieInstance.destroy();
-                hlsMovieInstance = new Hls();
-                hlsMovieInstance.loadSource(url);
-                hlsMovieInstance.attachMedia(movieVideoElement);
-            } else if (movieVideoElement.canPlayType('application/vnd.apple.mpegurl')) {
+            // পুরানো HLS ইনস্ট্যান্স বন্ধ করা
+            if (hlsMovieInstance) {
+                hlsMovieInstance.destroy();
+                hlsMovieInstance = null;
+            }
+
+            // ভিডিওর সোর্স রিসেট করা
+            movieVideoElement.removeAttribute('src');
+            movieVideoElement.load();
+
+            // FTPBD বা অন্যান্য সিকিউরড সার্ভারের CORS ব্লকিং বাইপাস করার চেষ্টা
+            movieVideoElement.crossOrigin = "anonymous";
+
+            // যদি মুভিটি .m3u8 ফরম্যাটের (HLS) হয়
+            if (url.includes('.m3u8')) {
+                if (Hls.isSupported()) {
+                    hlsMovieInstance = new Hls();
+                    hlsMovieInstance.loadSource(url);
+                    hlsMovieInstance.attachMedia(movieVideoElement);
+                } else if (movieVideoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                    movieVideoElement.src = url;
+                }
+            } else {
+                // সরাসরি সাধারণ MP4 বা MKV মুভি লিঙ্ক হলে
                 movieVideoElement.src = url;
             }
             
-            movieVideoElement.play();
-            // পেজের উপরে স্ক্রল করানো যাতে প্লেয়ারটি দেখা যায়
+            movieVideoElement.load();
+            
+            // প্লে করার প্রমিজ হ্যান্ডেল
+            const playPromise = movieVideoElement.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Auto-play blocked or streaming error:", error);
+                });
+            }
+            
+            // প্লেয়ার স্ক্রিনে স্ক্রল করা
             playerContainer.scrollIntoView({ behavior: 'smooth' });
         }
 
         function closeMoviePlayer() {
             movieVideoElement.pause();
+            movieVideoElement.removeAttribute('src');
+            movieVideoElement.load();
             document.getElementById('movie-theater-player-container').classList.add('hidden');
         }
 
