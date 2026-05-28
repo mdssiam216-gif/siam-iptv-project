@@ -29,9 +29,21 @@
                 </p>
             </div>
 
+            <!-- ভিডিও প্লেয়ার -->
             <div class="w-full max-w-4xl aspect-video bg-zinc-900 rounded-lg overflow-hidden shadow-2xl border border-zinc-800">
                 <video id="iptv-player" class="w-full h-full" controls autoplay></video>
             </div>
+
+            <!-- ব্রেকিং নিউজ / নোটিশ স্ক্রোলার (Marquee Notice) -->
+            <div class="w-full max-w-4xl mt-4 bg-red-950/40 border border-red-900/50 rounded-md flex items-center overflow-hidden h-9">
+                <div class="bg-red-600 text-white font-bold text-xs md:text-sm px-3 py-2 uppercase tracking-wider whitespace-nowrap z-10 animate-pulse">
+                    📢 ব্রেকিং নিউজ:
+                </div>
+                <marquee class="text-xs md:text-sm text-red-200 font-medium tracking-wide" scrollamount="5" onmouseover="this.stop();" onmouseout="this.start();">
+                    আজ রাত ৯টায় হাইভোল্টেজ ম্যাচ সরাসরি সম্প্রচার করা হবে! বাফারিং ছাড়াই ফুল এইচডি কোয়ালিটিতে দেখতে চোখ রাখুন সিয়ামের লাইভ টিভিতে। নতুন চ্যানেলের রিকোয়েস্ট করতে টেলিগ্রাম গ্রুপে জয়েন করুন।
+                </marquee>
+            </div>
+
             <p id="now-playing" class="mt-3 text-gray-400 font-semibold text-lg">Select a Channel to Play</p>
         </div>
 
@@ -43,7 +55,6 @@
                     <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                     এই মুহূর্তে লাইভ দেখছেন:
                 </span>
-                <!-- ফ্রি কাউন্টার উইজেট -->
                 <div class="bg-zinc-800 px-2.5 py-1 rounded text-sm font-bold text-green-400 border border-zinc-700">
                     <script type="text/javascript" src="//counter.websiteout.net/js/5/0/0/1"></script>
                 </div>
