@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FREE IPTV PROJECT</title>
+    <title>SIAM IPTV PROJECT</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
@@ -18,7 +18,8 @@
     <!-- 🔐 লগইন স্ক্রিন ইন্টারফেস -->
     <div id="login-screen" class="fixed inset-0 bg-[#0d1117] flex justify-center items-center p-4 z-[9999]">
         <div class="bg-[#161b22] border border-gray-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center">
-            <h2 class="text-2xl font-bold tracking-wider text-red-500 mb-2">FREE IPTV <span class="text-white text-xs bg-gray-700 px-2 py-0.5 rounded ml-1">PROJECT</span></h2>
+            <!-- 🔄 এখানে FREE পরিবর্তন করে SIAM করা হয়েছে -->
+            <h2 class="text-2xl font-bold tracking-wider text-red-500 mb-2">SIAM IPTV <span class="text-white text-xs bg-gray-700 px-2 py-0.5 rounded ml-1">PROJECT</span></h2>
             <p class="text-xs text-gray-400 mb-6">সাইটে প্রবেশ করতে আপনার ইউজার আইডি ও পাসওয়ার্ড দিন</p>
             
             <div class="space-y-4 text-left">
@@ -38,10 +39,11 @@
         </div>
     </div>
 
-    <!-- 📺 মেইন সাইট কন্টেন্ট (লগইন সফল হলে এটি দেখাবে) -->
+    <!-- 📺 মেইন সাইট কন্টেন্ট -->
     <div id="main-content" class="hidden flex-1 flex flex-col min-h-screen">
         <header id="theme-header" class="border-b border-gray-800 p-4 bg-[#161b22] flex justify-between items-center shrink-0">
-            <h1 class="text-xl font-bold tracking-wider text-red-500">FREE IPTV <span id="theme-badge" class="text-white text-sm bg-gray-700 px-2 py-0.5 rounded ml-1">PROJECT</span></h1>
+            <!-- 🔄 মেইন হেডারেও SIAM IPTV করা হয়েছে -->
+            <h1 class="text-xl font-bold tracking-wider text-red-500">SIAM IPTV <span id="theme-badge" class="text-white text-sm bg-gray-700 px-2 py-0.5 rounded ml-1">PROJECT</span></h1>
             <div class="flex items-center gap-3">
                 <a href="https://t.me/Mr_Ooliver" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-xs px-3 py-1.5 rounded font-bold text-white">TELEGRAM</a>
                 <button onclick="handleLogout()" class="bg-zinc-800 hover:bg-zinc-700 text-gray-300 text-xs px-2.5 py-1.5 rounded font-medium cursor-pointer border border-zinc-700">Logout</button>
@@ -118,7 +120,7 @@
         <div id="theme-modal-card" class="bg-[#161b22] border border-gray-800 rounded-xl max-w-md w-full p-5 shadow-2xl relative">
             <h3 class="text-base font-bold text-red-500 mb-3 flex items-center gap-2">⚠️ Copyright Disclaimer</h3>
             <p id="theme-modal-text" class="text-xs md:text-sm text-gray-300 leading-relaxed">
-                Free IPTV Project does not host, stream, or store any of the video content or channels available on this website. All streaming links are aggregated from publicly accessible, third-party websites on the internet. We only provide an interface to embed these external links for informational purposes. All content, trademarks, and copyrights belong strictly to their respective owners.
+                SIAM IPTV Project does not host, stream, or store any of the video content or channels available on this website. All streaming links are aggregated from publicly accessible, third-party websites on the internet. We only provide an interface to embed these external links for informational purposes. All content, trademarks, and copyrights belong strictly to their respective owners.
             </p>
             <div class="mt-4 flex justify-end">
                 <button onclick="toggleDisclaimer()" id="theme-modal-close" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs px-4 py-2 rounded-md font-semibold cursor-pointer transition">Close</button>
@@ -133,13 +135,12 @@
         let hlsInstance = null;
         let isLightMode = false;
 
-        // 🔐 লগইন চেক করার ফাংশন
+        // 🔐 লগইন চেক
         function checkLogin() {
             const usernameInput = document.getElementById('login-username').value;
             const passwordInput = document.getElementById('login-password').value;
             const errorMsg = document.getElementById('login-error');
 
-            // আপনার দেওয়া নতুন আইডি এবং পাসওয়ার্ড এখানে আপডেট করা হয়েছে
             if (usernameInput === 'imtiyaz siam' && passwordInput === 'siam123@') {
                 localStorage.setItem('iptv_authenticated', 'true');
                 errorMsg.classList.add('hidden');
@@ -149,20 +150,17 @@
             }
         }
 
-        // লগইন সফল হলে মেইন সাইট দেখানোর ফাংশন
         function showMainContent() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('main-content').classList.remove('hidden');
             loadChannelData();
         }
 
-        // লগআউট করার ফাংশন
         function handleLogout() {
             localStorage.removeItem('iptv_authenticated');
             location.reload();
         }
 
-        // পেজ লোড হবার পর প্রথম চেক
         window.addEventListener('DOMContentLoaded', () => {
             const isAuthenticated = localStorage.getItem('iptv_authenticated');
             if (isAuthenticated === 'true') {
@@ -170,7 +168,6 @@
             }
         });
 
-        // থিম পরিবর্তনের ফাংশন
         function toggleTheme() {
             isLightMode = !isLightMode;
             localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
