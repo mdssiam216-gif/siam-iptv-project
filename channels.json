@@ -27,11 +27,18 @@
     "logo": "https://i.pinimg.com/736x/55/bc/a6/55bca6bbbd01df17b64a10376c172878.jpg",
     "url": "https://tvsen7.aynaott.com/sspts1/tracks-v1a1/mono.ts.m3u8"
  },
-  {
-"id": 5,
-    "name": "sony max",
-    "category": "Entertainment",
-    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/SONY_MAX_Logo_2022.png/960px-SONY_MAX_Logo_2022.png",
-    "url": "https://edge2.roarzone.net:8447/roarzone/edge3/sony_max/tracks-v1a1/mono.m3u8"
-      }
+ {
+            "id": 5,
+            "name": "sony max",
+            "category": "Entertainment",
+            "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/SONY_MAX_Logo_2022.png/960px-SONY_MAX_Logo_2022.png",
+            "url": "https://edge2.roarzone.net:8447/roarzone/edge3/sony_max/tracks-v1a1/mono.m3u8"
+        },
+        {
+            "id": 6,
+            "name": "Seethamma Vakitlo Sirimalle Chettu",
+            "category": "Movies",
+            "logo": "https://ftpbd.net/wp-content/uploads/2026/05/sP0U5uHuLdc0m8pDqHhofyCqvL4.jpg",
+            "url": "https://www.ftpbd.net/FILE--SERVER/FTP-3/South%20Indian%20Movies/HINDI-DUBBED/(2013)/Seethamma-Vakitlo-Sirimalle-Chettu-2013/Sabse-Badhkar-Hum-2-2013-1080p-Hindi-Dubbed-WebRip_reencoded.mp4"
+        }
 ]
