@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "BTV HD",
+    "category": "News",
+    "logo": "https://i.postimg.cc/cJHPmjNJ/BTV.jpg",
+    "url": "http://103.230.105.252:1935/live/btv/manifest.m3u8"
+  },
+  {
+    "id": 2,
+    "name": "DD Sports",
+    "category": "Sports",
+    "logo": "https://i.postimg.cc/7hVCMDyZ/dd-sports.jpg",
+    "url": "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/b17adfe543354fdd8d189b110617cddd/index_3.m3u8"
+  },
+  {
+    "id": 3,
+    "name": "Deepto TV",
+    "category": "Entertainment",
+    "logo": "https://i.postimg.cc/L6WP5g60/Deepto-TV.jpg",
+    "url": "https://byphdgllyk.gpcdn.net/hls/deeptotv/index.m3u8"
+  }
+]
