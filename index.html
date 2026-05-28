@@ -8,21 +8,20 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         body { background-color: #0d1117; color: white; }
-        /* স্মুথ স্ক্রলিং এর জন্য */
         html { scroll-behavior: smooth; }
     </style>
 </head>
-<body class="font-sans antialiased">
+<body class="font-sans antialiased flex flex-col min-h-screen">
 
-    <header class="border-b border-gray-800 p-4 bg-[#161b22] flex justify-between items-center">
+    <header class="border-b border-gray-800 p-4 bg-[#161b22] flex justify-between items-center shrink-0">
         <h1 class="text-xl font-bold tracking-wider text-red-500">FREE IPTV <span class="text-white text-sm bg-gray-700 px-2 py-0.5 rounded ml-1">PROJECT</span></h1>
         <a href="https://t.me/Mr_Ooliver" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-xs px-3 py-1.5 rounded font-bold">TELEGRAM</a>
     </header>
 
-    <main class="flex flex-col lg:flex-row h-[calc(100vh-65px)] overflow-hidden">
+    <main class="flex flex-col lg:flex-row flex-1 overflow-hidden">
         <!-- বামদিকের মেইন প্লেয়ার অংশ -->
         <div id="video-section" class="flex-1 bg-black flex flex-col justify-center items-center p-4 overflow-y-auto lg:overflow-hidden">
-            <!-- ওপরে নতুন বাংলা লেখা যোগ করার কোড -->
+            <!-- ওপরে বাংলা লেখা -->
             <div class="text-center mb-4 md:mb-6 px-4">
                 <h2 class="text-xl md:text-3xl font-bold text-white drop-shadow-md">
                     স্বাগতম সিয়ামের লাইভ টিভি প্ল্যাটফর্মে! 📺
@@ -51,9 +50,9 @@
         </div>
 
         <!-- ডানদিকের সাইডবার (সার্চ ও চ্যানেল লিস্ট) -->
-        <div class="w-full lg:w-96 bg-[#161b22] border-t lg:border-t-0 lg:border-l border-gray-800 flex flex-col h-1/2 lg:h-full">
+        <div class="w-full lg:w-96 bg-[#161b22] border-t lg:border-t-0 lg:border-l border-gray-800 flex flex-col h-[50vh] lg:h-auto">
             
-            <!-- রিয়েল-টাইม লাইভ ইউজার কাউন্টার বক্স -->
+            <!-- রিয়েল-টাইম লাইভ ইউজার কাউন্টার বক্স -->
             <div class="p-3 border-b border-gray-800 flex justify-between items-center bg-zinc-900/40">
                 <span class="text-sm font-semibold text-gray-300 flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -82,18 +81,50 @@
         </div>
     </main>
 
+    <!-- নতুন কাস্টম ফুটার (Copyright Disclaimer & Telegram) -->
+    <footer class="bg-[#0d1117] border-t border-gray-800 p-3 text-center text-xs md:text-sm text-gray-400 flex flex-wrap justify-center items-center gap-4 shrink-0">
+        <button onclick="toggleDisclaimer()" class="hover:text-white transition cursor-pointer flex items-center gap-1 font-medium">
+            © Copyright Disclaimer
+        </button>
+        <span class="text-gray-700">|</span>
+        <a href="https://t.me/Mr_Ooliver" target="_blank" class="text-blue-400 hover:text-blue-300 transition flex items-center gap-1 font-bold">
+            ✈ TELEGRAM
+        </a>
+    </footer>
+
+    <!-- স্ক্রিনশটের মতো চমৎকার ডিসক্লেইমার পপ-আপ বক্স -->
+    <div id="disclaimer-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-xs flex justify-center items-center p-4 z-50">
+        <div class="bg-[#161b22] border border-gray-800 rounded-xl max-w-md w-full p-5 shadow-2xl relative">
+            <h3 class="text-base font-bold text-red-500 mb-3 flex items-center gap-2">⚠️ Copyright Disclaimer</h3>
+            <p class="text-xs md:text-sm text-gray-300 leading-relaxed">
+                Free IPTV Project does not host, stream, or store any of the video content or channels available on this website. All streaming links are aggregated from publicly accessible, third-party websites on the internet. We only provide an interface to embed these external links for informational purposes. All content, trademarks, and copyrights belong strictly to their respective owners.
+            </p>
+            <div class="mt-4 flex justify-end">
+                <button onclick="toggleDisclaimer()" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs px-4 py-2 rounded-md font-semibold cursor-pointer transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let allChannels = [];
         let currentCategory = 'All';
         const videoElement = document.getElementById('iptv-player');
         let hlsInstance = null;
 
+        // ডিসক্লেইমার পপ-আপ খোলা/বন্ধ করার ফাংশন
+        function toggleDisclaimer() {
+            const modal = document.getElementById('disclaimer-modal');
+            modal.classList.toggle('hidden');
+        }
+
         fetch('channels.json')
             .then(res => res.json())
             .then(data => {
                 allChannels = data;
                 renderList(allChannels);
-                if(data.length > 0) playChannel(data[0].url, data[0].name, false); // প্রথমবার পেজ লোডে অটো-স্ক্রল বন্ধ থাকবে
+                if(data.length > 0) playChannel(data[0].url, data[0].name, false);
             }).catch(err => console.error("Error loading JSON:", err));
 
         function renderList(channels) {
@@ -128,7 +159,6 @@
                 videoElement.src = url;
             }
 
-            // মোবাইলের জন্য ক্লিক করলে অটোমেটিক প্লেয়ারের কাছে স্ক্রল করার ম্যাজিক লজিক
             if (shouldScroll && window.innerWidth < 1024) {
                 document.getElementById('video-section').scrollIntoView({ behavior: 'smooth' });
             }
