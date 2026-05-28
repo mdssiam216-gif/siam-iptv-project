@@ -8,6 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         body { background-color: #0d1117; color: white; }
+        /* স্মুথ স্ক্রলিং এর জন্য */
+        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body class="font-sans antialiased">
@@ -18,9 +20,10 @@
     </header>
 
     <main class="flex flex-col lg:flex-row h-[calc(100vh-65px)] overflow-hidden">
-        <div class="flex-1 bg-black flex flex-col justify-center items-center p-4">
+        <!-- বামদিকের মেইন প্লেয়ার অংশ -->
+        <div id="video-section" class="flex-1 bg-black flex flex-col justify-center items-center p-4 overflow-y-auto lg:overflow-hidden">
             <!-- ওপরে নতুন বাংলা লেখা যোগ করার কোড -->
-            <div class="text-center mb-6 px-4">
+            <div class="text-center mb-4 md:mb-6 px-4">
                 <h2 class="text-xl md:text-3xl font-bold text-white drop-shadow-md">
                     স্বাগতম সিয়ামের লাইভ টিভি প্ল্যাটফর্মে! 📺
                 </h2>
@@ -34,7 +37,7 @@
                 <video id="iptv-player" class="w-full h-full" controls autoplay></video>
             </div>
 
-            <!-- ব্রেকিং নিউজ / নোটিশ স্ক্রোলার (Marquee Notice) -->
+            <!-- নোটিশ স্ক্রোলার -->
             <div class="w-full max-w-4xl mt-4 bg-red-950/40 border border-red-900/50 rounded-md flex items-center overflow-hidden h-9">
                 <div class="bg-red-600 text-white font-bold text-xs md:text-sm px-3 py-2 uppercase tracking-wider whitespace-nowrap z-10 animate-pulse">
                     📢 নোটিশ:
@@ -47,9 +50,10 @@
             <p id="now-playing" class="mt-3 text-gray-400 font-semibold text-lg">Select a Channel to Play</p>
         </div>
 
-        <div class="w-full lg:w-96 bg-[#161b22] border-t lg:border-t-0 lg:border-l border-gray-800 flex flex-col h-full">
+        <!-- ডানদিকের সাইডবার (সার্চ ও চ্যানেল লিস্ট) -->
+        <div class="w-full lg:w-96 bg-[#161b22] border-t lg:border-t-0 lg:border-l border-gray-800 flex flex-col h-1/2 lg:h-full">
             
-            <!-- রিয়েল-টাইম লাইভ ইউজার কাউন্টার বক্স -->
+            <!-- রিয়েল-টাইม লাইভ ইউজার কাউন্টার বক্স -->
             <div class="p-3 border-b border-gray-800 flex justify-between items-center bg-zinc-900/40">
                 <span class="text-sm font-semibold text-gray-300 flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -60,17 +64,20 @@
                 </div>
             </div>
 
-            <div class="p-3 border-b border-gray-800 flex gap-1.5 overflow-x-auto text-xs">
+            <!-- ক্যাটাগরি বাটন সমূহ -->
+            <div class="p-3 border-b border-gray-800 flex gap-1.5 overflow-x-auto text-xs shrink-0">
                 <button onclick="filterCategory('All')" class="bg-red-600 px-3 py-1.5 rounded-md font-bold cursor-pointer">All Channels</button>
                 <button onclick="filterCategory('Sports')" class="bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-md font-medium cursor-pointer">Sports</button>
                 <button onclick="filterCategory('News')" class="bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-md font-medium cursor-pointer">News</button>
                 <button onclick="filterCategory('Entertainment')" class="bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-md font-medium cursor-pointer">Entertainment</button>
             </div>
 
-            <div class="p-3">
+            <!-- সার্চ বক্স -->
+            <div class="p-3 border-b border-gray-800 shrink-0">
                 <input type="text" id="search-box" oninput="searchChannels()" placeholder="Search channels..." class="w-full bg-[#0d1117] border border-gray-800 rounded-md p-2 text-sm focus:outline-none focus:border-red-500">
             </div>
 
+            <!-- চ্যানেল লিস্ট -->
             <div id="channel-list" class="flex-1 overflow-y-auto p-3 space-y-2"></div>
         </div>
     </main>
@@ -86,7 +93,7 @@
             .then(data => {
                 allChannels = data;
                 renderList(allChannels);
-                if(data.length > 0) playChannel(data[0].url, data[0].name);
+                if(data.length > 0) playChannel(data[0].url, data[0].name, false); // প্রথমবার পেজ লোডে অটো-স্ক্রল বন্ধ থাকবে
             }).catch(err => console.error("Error loading JSON:", err));
 
         function renderList(channels) {
@@ -100,17 +107,18 @@
 
             channels.forEach((ch, index) => {
                 listContainer.innerHTML += `
-                    <div onclick="playChannel('${ch.url}', '${ch.name}')" class="flex items-center gap-3 p-2 bg-[#0d1117] hover:bg-zinc-900 border border-gray-800 rounded-md cursor-pointer transition-all">
+                    <div onclick="playChannel('${ch.url}', '${ch.name}', true)" class="flex items-center gap-3 p-2.5 bg-zinc-900/50 hover:bg-zinc-800 border border-gray-800 rounded-md cursor-pointer transition-all hover:scale-[1.01]">
                         <span class="text-xs font-bold text-red-500 w-4">${index + 1}</span>
-                        <img src="${ch.logo}" class="w-8 h-8 rounded object-cover bg-white" onerror="this.src='https://placehold.co/50x50?text=TV'">
-                        <span class="text-sm font-medium tracking-wide">${ch.name}</span>
+                        <img src="${ch.logo}" class="w-8 h-8 rounded object-cover bg-zinc-800 border border-zinc-700" onerror="this.src='https://placehold.co/50x50?text=TV'">
+                        <span class="text-sm font-medium tracking-wide flex-1 truncate">${ch.name}</span>
                     </div>
                 `;
             });
         }
 
-        function playChannel(url, name) {
+        function playChannel(url, name, shouldScroll = true) {
             document.getElementById('now-playing').innerText = "⚡ Now Playing: " + name;
+            
             if (Hls.isSupported()) {
                 if (hlsInstance) hlsInstance.destroy();
                 hlsInstance = new Hls();
@@ -118,6 +126,11 @@
                 hlsInstance.attachMedia(videoElement);
             } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
                 videoElement.src = url;
+            }
+
+            // মোবাইলের জন্য ক্লিক করলে অটোমেটিক প্লেয়ারের কাছে স্ক্রল করার ম্যাজিক লজিক
+            if (shouldScroll && window.innerWidth < 1024) {
+                document.getElementById('video-section').scrollIntoView({ behavior: 'smooth' });
             }
         }
 
