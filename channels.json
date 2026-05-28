@@ -47,6 +47,12 @@
             "category": "Movies",
             "logo": "https://i.imgbd.org/poster_4i601779559231.jpg",
             "url": "https://play.movielinkbd.mom/watch/Jx90opM-WoiDKdiP.LwY1wfjIEE8EMw7ERW9fDaPiPQeyDmPttIIXDdysHqfMRcaj7fL_b97EQR-3LQYjpKDzBjK-XIRc.jvNmgFZJF-m3N06W17zkSg"
-           }
+           },
+ {
+           "id": 8,
+    "name": "T Sports",
+    "category": "Sports",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/T_Sports_logo.svg/250px-T_Sports_logo.svg.png",
+    "url": "https://tvsen7.aynaott.com/tsports-hd/tracks-v1a1/mono.ts.m3u8"
+             }
 ]
-          
