@@ -494,25 +494,6 @@
         function searchChannels() {
             renderList(allChannels);
         }
-        <!-- স্ক্রলিং বাটনগুলো script ট্যাগের বাইরে রাখুন -->
-    <div class="fixed bottom-10 right-4 flex flex-col gap-2 z-50">
-        <button onclick="scrollList('up')" class="bg-zinc-800 p-3 rounded-full hover:bg-zinc-700 transition text-white">▲</button>
-        <button onclick="scrollList('down')" class="bg-zinc-800 p-3 rounded-full hover:bg-zinc-700 transition text-white">▼</button>
-    </div>
-
-    <script>
-        // আপনার আগের সব ফাংশনগুলো এখানে থাকবে
-
-        // স্ক্রলিং ফাংশন
-        function scrollList(direction) {
-            const list = document.getElementById('channel-list');
-            const scrollAmount = 200;
-            if (direction === 'up') {
-                list.scrollBy({ top: -scrollAmount, behavior: 'smooth' });
-            } else {
-                list.scrollBy({ top: scrollAmount, behavior: 'smooth' });
-            }
-        }
     </script>
 </body>
 </html>
