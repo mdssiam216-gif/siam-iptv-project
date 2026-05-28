@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIAM IPTV PROJECT</title>
+    <title>SIAM IPTV & MOVIE THEATER</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         html { scroll-behavior: smooth; }
         body, div, header, footer, input, button {
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+        /* মুভি কার্ডের বিশেষ ইফেক্ট */
+        .movie-card:hover img {
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -18,7 +22,6 @@
     <!-- 🔐 লগইন স্ক্রিন ইন্টারফেস -->
     <div id="login-screen" class="fixed inset-0 bg-[#0d1117] flex justify-center items-center p-4 z-[9999]">
         <div class="bg-[#161b22] border border-gray-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center">
-            <!-- 🔄 এখানে FREE পরিবর্তন করে SIAM করা হয়েছে -->
             <h2 class="text-2xl font-bold tracking-wider text-red-500 mb-2">SIAM IPTV <span class="text-white text-xs bg-gray-700 px-2 py-0.5 rounded ml-1">PROJECT</span></h2>
             <p class="text-xs text-gray-400 mb-6">সাইটে প্রবেশ করতে আপনার ইউজার আইডি ও পাসওয়ার্ড দিন</p>
             
@@ -41,16 +44,28 @@
 
     <!-- 📺 মেইন সাইট কন্টেন্ট -->
     <div id="main-content" class="hidden flex-1 flex flex-col min-h-screen">
-        <header id="theme-header" class="border-b border-gray-800 p-4 bg-[#161b22] flex justify-between items-center shrink-0">
-            <!-- 🔄 মেইন হেডারেও SIAM IPTV করা হয়েছে -->
-            <h1 class="text-xl font-bold tracking-wider text-red-500">SIAM IPTV <span id="theme-badge" class="text-white text-sm bg-gray-700 px-2 py-0.5 rounded ml-1">PROJECT</span></h1>
+        
+        <!-- 🧭 নেভিগেশন বার (টিভি এবং মুভি পেজ টগল করার অপশন) -->
+        <header id="theme-header" class="border-b border-gray-800 p-4 bg-[#161b22] flex flex-col sm:flex-row gap-4 justify-between items-center shrink-0">
+            <div class="flex items-center gap-4">
+                <h1 class="text-xl font-bold tracking-wider text-red-500">SIAM IPTV <span id="theme-badge" class="text-white text-sm bg-gray-700 px-2 py-0.5 rounded ml-1">PROJECT</span></h1>
+                
+                <!-- 🔄 পেজ পরিবর্তনের মেইন বাটন দুটি -->
+                <nav class="flex bg-[#0d1117] p-1 rounded-lg border border-gray-800">
+                    <button onclick="switchTab('tv')" id="tab-tv-btn" class="px-4 py-1.5 rounded-md text-xs font-bold bg-red-600 text-white transition cursor-pointer">📺 Live TV</button>
+                    <button onclick="switchTab('movies')" id="tab-movies-btn" class="px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition cursor-pointer">🎬 Movie Theater</button>
+                </nav>
+            </div>
+            
             <div class="flex items-center gap-3">
                 <a href="https://t.me/Mr_Ooliver" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-xs px-3 py-1.5 rounded font-bold text-white">TELEGRAM</a>
+                <button onclick="toggleTheme()" id="theme-btn" class="p-1.5 bg-zinc-800 border border-zinc-700 rounded-md hover:bg-zinc-700 cursor-pointer text-sm" title="Toggle Light/Dark Mode">🌙</button>
                 <button onclick="handleLogout()" class="bg-zinc-800 hover:bg-zinc-700 text-gray-300 text-xs px-2.5 py-1.5 rounded font-medium cursor-pointer border border-zinc-700">Logout</button>
             </div>
         </header>
 
-        <main class="flex flex-col lg:flex-row flex-1 overflow-hidden">
+        <!-- ================= [ ১. লাইভ টিভি পেজ সেকশন ] ================= -->
+        <main id="tv-page-section" class="flex flex-col lg:flex-row flex-1 overflow-hidden">
             <!-- বামদিকের মেইন প্লেয়ার অংশ -->
             <div id="video-section" class="flex-1 bg-black flex flex-col justify-center items-center p-4 overflow-y-auto lg:overflow-hidden">
                 <div class="text-center mb-4 md:mb-6 px-4">
@@ -85,11 +100,8 @@
                         <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                         লাইভ দেখছেন:
                     </span>
-                    <div class="flex items-center gap-3">
-                        <div id="theme-counter-box" class="bg-zinc-800 px-2.5 py-1 rounded text-sm font-bold text-green-400 border border-zinc-700">
-                            <script type="text/javascript" src="//counter.websiteout.net/js/5/0/0/1"></script>
-                        </div>
-                        <button onclick="toggleTheme()" id="theme-btn" class="p-1.5 bg-zinc-800 border border-zinc-700 rounded-md hover:bg-zinc-700 cursor-pointer text-sm" title="Toggle Light/Dark Mode">🌙</button>
+                    <div id="theme-counter-box" class="bg-zinc-800 px-2.5 py-1 rounded text-sm font-bold text-green-400 border border-zinc-700">
+                        <script type="text/javascript" src="//counter.websiteout.net/js/5/0/0/1"></script>
                     </div>
                 </div>
 
@@ -108,6 +120,36 @@
             </div>
         </main>
 
+        <!-- ================= [ ২. ডেডিকেটেড মুভি থিয়েটার পেজ সেکশন ] ================= -->
+        <main id="movie-page-section" class="hidden flex-1 flex flex-col p-4 md:p-6 overflow-y-auto max-w-7xl w-full mx-auto">
+            <!-- বড় মুভি প্লেয়ার (যখন কোনো মুভি প্লে করা হবে তখন এটি ওপেন হবে) -->
+            <div id="movie-theater-player-container" class="hidden mb-8 w-full bg-black rounded-xl overflow-hidden shadow-2xl border border-zinc-800 p-2">
+                <div class="flex justify-between items-center p-2 text-sm">
+                    <span id="movie-playing-title" class="font-bold text-red-500">🎬 Now Playing: Movie Name</span>
+                    <button onclick="closeMoviePlayer()" class="text-xs bg-zinc-800 hover:bg-red-600 px-2.5 py-1 rounded text-white font-bold transition cursor-pointer">❌ Close Player</button>
+                </div>
+                <div class="w-full aspect-video bg-zinc-950 rounded-lg overflow-hidden">
+                    <video id="movie-player" class="w-full h-full" controls></video>
+                </div>
+            </div>
+
+            <!-- মুভি সার্চ এবং টাইটেল -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-800 pb-4">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-wide text-white">🍿 সিয়ামের মুভি গ্যালারি (Movie Theater)</h2>
+                    <p class="text-xs text-gray-400 mt-1">আপনার পছন্দের যেকোনো মুভি যখন খুশি তখন ওয়ান-ক্লিক প্লে করে উপভোগ করুন।</p>
+                </div>
+                <div class="w-full md:w-72">
+                    <input type="text" id="movie-search-box" oninput="renderMovieGrid()" placeholder="Search movies by name..." class="w-full bg-[#161b22] border border-gray-800 rounded-md p-2 text-sm text-white focus:outline-none focus:border-red-500">
+                </div>
+            </div>
+
+            <!-- নেটফ্লিক্স স্টাইল মুভি গ্রিড (এখানে সব মুভি আপলোড হয়ে থাকবে) -->
+            <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+                <!-- মুভিগুলো জাভাস্ক্রিপ্ট দিয়ে এখানে লোড হবে -->
+            </div>
+        </main>
+
         <footer id="theme-footer" class="bg-[#0d1117] border-t border-gray-800 p-3 text-center text-xs md:text-sm text-gray-400 flex flex-wrap justify-center items-center gap-4 shrink-0">
             <button onclick="toggleDisclaimer()" class="hover:text-white transition cursor-pointer flex items-center gap-1 font-medium">© Copyright Disclaimer</button>
             <span class="text-gray-700">|</span>
@@ -120,7 +162,7 @@
         <div id="theme-modal-card" class="bg-[#161b22] border border-gray-800 rounded-xl max-w-md w-full p-5 shadow-2xl relative">
             <h3 class="text-base font-bold text-red-500 mb-3 flex items-center gap-2">⚠️ Copyright Disclaimer</h3>
             <p id="theme-modal-text" class="text-xs md:text-sm text-gray-300 leading-relaxed">
-                SIAM IPTV Project does not host, stream, or store any of the video content or channels available on this website. All streaming links are aggregated from publicly accessible, third-party websites on the internet. We only provide an interface to embed these external links for informational purposes. All content, trademarks, and copyrights belong strictly to their respective owners.
+                SIAM IPTV Project does not host, stream, or store any of the video content or channels available on this website. All streaming links are aggregated from publicly accessible, third-party websites on the internet.
             </p>
             <div class="mt-4 flex justify-end">
                 <button onclick="toggleDisclaimer()" id="theme-modal-close" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs px-4 py-2 rounded-md font-semibold cursor-pointer transition">Close</button>
@@ -131,8 +173,10 @@
     <script>
         let allChannels = [];
         let currentCategory = 'All';
-        const videoElement = document.getElementById('iptv-player');
-        let hlsInstance = null;
+        const tvVideoElement = document.getElementById('iptv-player');
+        const movieVideoElement = document.getElementById('movie-player');
+        let hlsTvInstance = null;
+        let hlsMovieInstance = null;
         let isLightMode = false;
 
         // 🔐 লগইন চেক
@@ -168,6 +212,31 @@
             }
         });
 
+        // 🔄 পেজ পরিবর্তন বাটন লজিক (টিভি <-> মুভি)
+        function switchTab(tab) {
+            const tvBtn = document.getElementById('tab-tv-btn');
+            const moviesBtn = document.getElementById('tab-movies-btn');
+            const tvSection = document.getElementById('tv-page-section');
+            const movieSection = document.getElementById('movie-page-section');
+
+            // টিভি প্লেয়ার এবং মুভি প্লেয়ার দুটোই বন্ধ বা পজ করে দেওয়া সেফটি হিসেবে
+            tvVideoElement.pause();
+            movieVideoElement.pause();
+
+            if (tab === 'tv') {
+                tvSection.classList.remove('hidden');
+                movieSection.classList.add('hidden');
+                tvBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold bg-red-600 text-white transition cursor-pointer";
+                moviesBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition cursor-pointer";
+            } else {
+                tvSection.classList.add('hidden');
+                movieSection.classList.remove('hidden');
+                moviesBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold bg-red-600 text-white transition cursor-pointer";
+                tvBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition cursor-pointer";
+                renderMovieGrid();
+            }
+        }
+
         function toggleTheme() {
             isLightMode = !isLightMode;
             localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
@@ -202,7 +271,7 @@
 
             if (isLightMode) {
                 if(body) body.className = "font-sans antialiased flex flex-col min-h-screen bg-gray-100 text-gray-900";
-                if(header) header.className = "border-b border-gray-300 p-4 bg-white flex justify-between items-center shrink-0 shadow-xs";
+                if(header) header.className = "border-b border-gray-300 p-4 bg-white flex flex-col sm:flex-row gap-4 justify-between items-center shrink-0 shadow-xs";
                 if(badge) badge.className = "text-gray-700 text-sm bg-gray-200 px-2 py-0.5 rounded ml-1";
                 if(title) title.className = "text-xl md:text-3xl font-bold text-gray-900 drop-shadow-xs";
                 if(subtitle) subtitle.className = "text-xs md:text-sm text-gray-600 mt-2 font-medium tracking-wide";
@@ -225,7 +294,7 @@
                 [btnSports, btnNews, btnEnt].forEach(b => { if(b) b.className = "bg-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-md font-medium cursor-pointer text-gray-800"; });
             } else {
                 if(body) body.className = "font-sans antialiased flex flex-col min-h-screen bg-[#0d1117] text-white";
-                if(header) header.className = "border-b border-gray-800 p-4 bg-[#161b22] flex justify-between items-center shrink-0";
+                if(header) header.className = "border-b border-gray-800 p-4 bg-[#161b22] flex flex-col sm:flex-row gap-4 justify-between items-center shrink-0";
                 if(badge) badge.className = "text-white text-sm bg-gray-700 px-2 py-0.5 rounded ml-1";
                 if(title) title.className = "text-xl md:text-3xl font-bold text-white drop-shadow-md";
                 if(subtitle) subtitle.className = "text-xs md:text-sm text-gray-400 mt-2 font-medium tracking-wide";
@@ -248,6 +317,7 @@
                 [btnSports, btnNews, btnEnt].forEach(b => { if(b) b.className = "bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-md font-medium cursor-pointer text-white"; });
             }
             renderList(allChannels);
+            renderMovieGrid();
         }
 
         function toggleDisclaimer() {
@@ -264,16 +334,22 @@
                         isLightMode = true;
                     }
                     applyTheme();
-                    if(data.length > 0) playChannel(data[0].url, data[0].name, false);
+                    
+                    // ডিফল্ট প্রথম চ্যানেল টিভিতে প্লে করা (শুধু টিভি চ্যানেল হলে)
+                    const tvOnly = data.filter(ch => ch.category !== 'Movies');
+                    if(tvOnly.length > 0) playChannel(tvOnly[0].url, tvOnly[0].name, false);
                 }).catch(err => console.error("Error loading JSON:", err));
         }
 
+        // 📺 টিভি লিস্ট রেন্ডার
         function renderList(channels) {
             const listContainer = document.getElementById('channel-list');
             if(!listContainer) return;
             listContainer.innerHTML = '';
             
-            const filtered = channels.filter(ch => (currentCategory === 'All' || ch.category === currentCategory));
+            // Movies বাদে বাকি সব চ্যানেলকে এখানে ফিল্টার করা হচ্ছে
+            const tvChannels = channels.filter(ch => ch.category !== 'Movies');
+            const filtered = tvChannels.filter(ch => (currentCategory === 'All' || ch.category === currentCategory));
             const query = document.getElementById('search-box') ? document.getElementById('search-box').value.toLowerCase() : '';
             const finalChannels = filtered.filter(ch => ch.name.toLowerCase().includes(query));
 
@@ -296,23 +372,89 @@
             });
         }
 
+        // 🍿 মুভি গ্রিড রেন্ডার (নেটফ্লিক্স স্টাইল)
+        function renderMovieGrid() {
+            const movieGrid = document.getElementById('movie-grid');
+            if(!movieGrid) return;
+            movieGrid.innerHTML = '';
+
+            // শুধুমাত্র Movies ক্যাটাগরির আইটেম ফিল্টার
+            const movies = allChannels.filter(ch => ch.category === 'Movies');
+            const query = document.getElementById('movie-search-box') ? document.getElementById('movie-search-box').value.toLowerCase() : '';
+            const finalMovies = movies.filter(m => m.name.toLowerCase().includes(query));
+
+            if (finalMovies.length === 0) {
+                movieGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 text-sm p-8">😔 কোনো মুভি পাওয়া যায়নি ভাই! আপনার channels.json ফাইলে মুভি যুক্ত করুন।</div>';
+                return;
+            }
+
+            const cardBg = isLightMode ? 'bg-white border-gray-300 text-gray-900 shadow-md' : 'bg-[#161b22] border-gray-800 text-white shadow-xl';
+
+            finalMovies.forEach(movie => {
+                const posterUrl = movie.logo && movie.logo !== "" ? movie.logo : 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=300';
+                
+                movieGrid.innerHTML += `
+                    <div onclick="playMovie('${movie.url}', '${movie.name}')" class="movie-card group cursor-pointer border rounded-xl overflow-hidden transition-all duration-300 flex flex-col h-full ${cardBg}">
+                        <div class="w-full aspect-[2/3] overflow-hidden bg-black relative">
+                            <img src="${posterUrl}" class="w-full h-full object-cover transition-transform duration-500" loading="lazy">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex justify-center items-center">
+                                <span class="bg-red-600 p-3 rounded-full text-white font-bold text-lg shadow-lg">▶</span>
+                            </div>
+                        </div>
+                        <div class="p-3 flex-1 flex flex-col justify-between">
+                            <h4 class="text-sm font-bold tracking-wide line-clamp-2">${movie.name}</h4>
+                            <span class="text-[10px] uppercase font-bold tracking-wider text-red-500 mt-2 block">Watch Now</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // 📺 টিভি চ্যানেল প্লে করার ফাংশন
         function playChannel(url, name, shouldScroll = true) {
             const nowPlayingElem = document.getElementById('now-playing');
             if(nowPlayingElem) nowPlayingElem.innerText = "⚡ Now Playing: " + name;
             
             if (Hls.isSupported()) {
-                if (hlsInstance) hlsInstance.destroy();
-                hlsInstance = new Hls();
-                hlsInstance.loadSource(url);
-                hlsInstance.attachMedia(videoElement);
-            } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-                videoElement.src = url;
+                if (hlsTvInstance) hlsTvInstance.destroy();
+                hlsTvInstance = new Hls();
+                hlsTvInstance.loadSource(url);
+                hlsTvInstance.attachMedia(tvVideoElement);
+            } else if (tvVideoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                tvVideoElement.src = url;
             }
 
             if (shouldScroll && window.innerWidth < 1024) {
                 const videoSection = document.getElementById('video-section');
                 if(videoSection) videoSection.scrollIntoView({ behavior: 'smooth' });
             }
+        }
+
+        // 🍿 মুভি প্লে করার ফাংশن
+        function playMovie(url, name) {
+            const playerContainer = document.getElementById('movie-theater-player-container');
+            const playingTitle = document.getElementById('movie-playing-title');
+            
+            playerContainer.classList.remove('hidden');
+            playingTitle.innerText = "🎬 Now Playing: " + name;
+
+            if (Hls.isSupported()) {
+                if (hlsMovieInstance) hlsMovieInstance.destroy();
+                hlsMovieInstance = new Hls();
+                hlsMovieInstance.loadSource(url);
+                hlsMovieInstance.attachMedia(movieVideoElement);
+            } else if (movieVideoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                movieVideoElement.src = url;
+            }
+            
+            movieVideoElement.play();
+            // পেজের উপরে স্ক্রল করানো যাতে প্লেয়ারটি দেখা যায়
+            playerContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closeMoviePlayer() {
+            movieVideoElement.pause();
+            document.getElementById('movie-theater-player-container').classList.add('hidden');
         }
 
         function filterCategory(cat) {
