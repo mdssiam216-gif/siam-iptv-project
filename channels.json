@@ -159,5 +159,12 @@
     "category": "Movies",
     "logo": "https://ftpbd.net/wp-content/uploads/2026/05/uIrFdMWlJFdc1jPBP9bxeaISCDj-scaled.jpg",
     "url": "https://www.ftpbd.net/wp-content/hls-file/Kara-2026-Hindi-Dubbed-1080p-WEBDL_reencoded/index.m3u8"
+    },
+  {
+    "id": 24,
+    "name": "beinsports xtra",
+    "category": "Sports",
+    "logo": "https://th.bing.com/th/id/OIP.1-7a9uTgwIvzKBmmGDsYTAHaEH?w=282&h=180&c=7&r=0&o=7&pid=1.7&rm=3",
+    "url": "https://bein-esp-xumo.amagi.tv/playlistR720P.m3u8"
   }
 ]
