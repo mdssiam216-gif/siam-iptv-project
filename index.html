@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-        
+       
         body { font-family: 'Inter', sans-serif; }
         .title-font { font-family: 'Space Grotesk', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
@@ -19,20 +19,19 @@
 <body class="bg-zinc-950 text-white min-h-screen">
 
     <div class="flex h-screen">
-        <!-- Sidebar -->
-        <div class="w-80 border-r border-white/10 bg-zinc-900/70 glass flex flex-col">
+
+        <!-- Sidebar - PC এ আগের মতোই -->
+        <div id="sidebar" class="w-80 border-r border-white/10 bg-zinc-900/70 glass flex-col hidden md:flex">
             <div class="p-5 border-b border-white/10">
                 <h1 class="text-4xl font-bold title-font tracking-[-2px] text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-400 to-pink-500 drop-shadow-lg">
                     SIAM<span class="text-white tracking-normal">IPTV</span>
                 </h1>
                 <p class="text-xs text-zinc-400 mt-1 tracking-[1px] font-medium">PREMIUM CINEMA EXPERIENCE</p>
             </div>
-
             <div class="flex p-2 mx-3 mt-4 bg-zinc-800/50 rounded-2xl">
                 <button onclick="switchTab('tv')" id="tab-tv-btn" class="flex-1 py-3 rounded-xl font-semibold text-sm bg-red-600 text-white">📺 LIVE TV</button>
                 <button onclick="switchTab('movies')" id="tab-movies-btn" class="flex-1 py-3 rounded-xl font-semibold text-sm text-zinc-400 hover:text-white">🎥 MOVIES</button>
             </div>
-
             <div class="px-5 py-4 flex items-center justify-between border-b border-white/10">
                 <div class="flex items-center gap-2">
                     <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -40,24 +39,30 @@
                 </div>
                 <div class="bg-zinc-800 px-4 py-1 rounded-full text-green-400 text-sm font-bold">2,347</div>
             </div>
-
             <div class="px-5 pt-4 flex gap-2 overflow-x-auto">
                 <button onclick="filterCategory('All')" class="px-5 py-1.5 bg-red-600 text-xs font-bold rounded-full">ALL</button>
                 <button onclick="filterCategory('Sports')" class="px-5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium rounded-full">SPORTS</button>
                 <button onclick="filterCategory('News')" class="px-5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium rounded-full">NEWS</button>
                 <button onclick="filterCategory('Entertainment')" class="px-5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium rounded-full">ENTERTAINMENT</button>
             </div>
-
             <div class="px-5 mt-3">
                 <input type="text" id="search-box" oninput="searchChannels()" placeholder="Search channels..." class="w-full bg-zinc-800 border border-white/10 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:border-red-500">
             </div>
-
             <div id="channel-list" class="flex-1 overflow-y-auto p-3 space-y-2"></div>
         </div>
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col">
-            <header class="h-14 border-b border-white/10 bg-zinc-900/80 glass flex items-center px-6 justify-between">
+
+            <!-- Mobile Top Bar -->
+            <div class="md:hidden bg-zinc-900 p-4 flex items-center justify-between border-b border-white/10">
+                <h1 class="text-2xl font-bold title-font tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-400 to-pink-500">
+                    SIAM<span class="text-white">IPTV</span>
+                </h1>
+                <button onclick="toggleSidebar()" class="text-3xl">☰</button>
+            </div>
+
+            <header class="hidden md:flex h-14 border-b border-white/10 bg-zinc-900/80 glass items-center px-6 justify-between">
                 <div id="now-playing" class="text-sm text-zinc-400">Select a channel to start watching</div>
                 <div class="flex items-center gap-4">
                     <a href="https://t.me/Mr_Ooliver" target="_blank" class="bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-2 rounded-2xl text-xs font-bold">TELEGRAM</a>
@@ -66,7 +71,7 @@
             </header>
 
             <!-- Live TV -->
-            <main id="tv-page-section" class="flex-1 p-6">
+            <main id="tv-page-section" class="flex-1 p-3 md:p-6">
                 <div class="relative h-full bg-black rounded-3xl overflow-hidden neon-glow border border-white/10">
                     <video id="iptv-player" class="w-full h-full" controls autoplay></video>
                     <div id="welcome-overlay" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-black/70 to-transparent">
@@ -79,7 +84,7 @@
             </main>
 
             <!-- Movie Theater -->
-            <main id="movie-page-section" class="hidden flex-1 p-6 overflow-y-auto">
+            <main id="movie-page-section" class="hidden flex-1 p-4 md:p-6 overflow-y-auto">
                 <div id="movie-theater-player-container" class="hidden mb-8 rounded-3xl overflow-hidden border border-white/10 bg-black">
                     <div class="flex justify-between items-center px-6 py-4 border-b border-white/10">
                         <span id="movie-playing-title" class="font-semibold text-lg text-red-400"></span>
@@ -87,7 +92,6 @@
                     </div>
                     <video id="movie-player" class="w-full aspect-video" controls></video>
                 </div>
-
                 <h2 class="text-3xl font-bold title-font mb-6">🍿 Movie Theater</h2>
                 <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
             </main>
@@ -103,6 +107,12 @@
         const tvVideo = document.getElementById('iptv-player');
         const movieVideo = document.getElementById('movie-player');
 
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+            sidebar.classList.toggle('flex');
+        }
+
         function loadChannelData() {
             fetch('channels.json')
                 .then(res => res.json())
@@ -111,19 +121,16 @@
                     renderList();
                     const firstTv = allChannels.find(ch => ch.category !== 'Movies');
                     if (firstTv) playChannel(firstTv.url, firstTv.name);
-                })
-                .catch(err => console.error("channels.json লোড করতে সমস্যা:", err));
+                });
         }
 
         function renderList() {
             const container = document.getElementById('channel-list');
             container.innerHTML = '';
-
             const filtered = allChannels
                 .filter(ch => ch.category !== 'Movies')
                 .filter(ch => currentCategory === 'All' || ch.category === currentCategory)
                 .filter(ch => ch.name.toLowerCase().includes(document.getElementById('search-box').value.toLowerCase()));
-
             filtered.forEach((ch, i) => {
                 const div = document.createElement('div');
                 div.className = `flex items-center gap-3 p-3 rounded-2xl cursor-pointer bg-zinc-800/70 hover:bg-zinc-700`;
@@ -140,7 +147,6 @@
         function playChannel(url, name) {
             document.getElementById('now-playing').innerHTML = `▶ Now Playing: <span class="text-red-400">${name}</span>`;
             document.getElementById('welcome-overlay').style.display = 'none';
-
             if (hlsTvInstance) hlsTvInstance.destroy();
             if (Hls.isSupported()) {
                 hlsTvInstance = new Hls();
@@ -154,9 +160,7 @@
         function renderMovieGrid() {
             const grid = document.getElementById('movie-grid');
             grid.innerHTML = '';
-
             const movies = allChannels.filter(ch => ch.category === 'Movies');
-
             movies.forEach(movie => {
                 const div = document.createElement('div');
                 div.className = `movie-card group cursor-pointer rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 hover:border-red-500/50`;
@@ -180,9 +184,7 @@
             const container = document.getElementById('movie-theater-player-container');
             document.getElementById('movie-playing-title').textContent = name;
             container.classList.remove('hidden');
-
             if (hlsMovieInstance) hlsMovieInstance.destroy();
-
             if (url.includes('.m3u8')) {
                 hlsMovieInstance = new Hls();
                 hlsMovieInstance.loadSource(url);
@@ -202,6 +204,12 @@
             document.getElementById('tv-page-section').classList.toggle('hidden', tab !== 'tv');
             document.getElementById('movie-page-section').classList.toggle('hidden', tab !== 'movies');
             if (tab === 'movies') renderMovieGrid();
+
+            // Active button
+            document.getElementById('tab-tv-btn').classList.toggle('bg-red-600', tab === 'tv');
+            document.getElementById('tab-tv-btn').classList.toggle('text-white', tab === 'tv');
+            document.getElementById('tab-movies-btn').classList.toggle('bg-red-600', tab === 'movies');
+            document.getElementById('tab-movies-btn').classList.toggle('text-white', tab === 'movies');
         }
 
         function filterCategory(cat) {
