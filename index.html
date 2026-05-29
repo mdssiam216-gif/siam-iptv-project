@@ -11,28 +11,21 @@
         
         body { font-family: 'Inter', sans-serif; }
         .title-font { font-family: 'Space Grotesk', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.12); }
-        
-        .logo-text {
-            background: linear-gradient(90deg, #ffffff, #f87171, #ffffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
+        .glass { background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-glow { box-shadow: 0 0 20px -5px rgb(255 0 51 / 0.6); }
         .movie-card:hover img { transform: scale(1.08); transition: all 0.4s ease; }
     </style>
 </head>
 <body class="bg-zinc-950 text-white min-h-screen">
 
-    <div class="flex h-screen flex-col md:flex-row">
-
+    <div class="flex h-screen">
         <!-- Sidebar -->
-        <div id="sidebar" class="w-full md:w-80 bg-zinc-900 border-r border-white/10 flex flex-col hidden md:flex">
+        <div class="w-80 border-r border-white/10 bg-zinc-900/70 glass flex flex-col">
             <div class="p-5 border-b border-white/10">
-                <h1 class="text-4xl font-bold title-font tracking-[-2px] logo-text">
-                    SIAM<span class="text-red-500">IPTV</span>
+                <h1 class="text-4xl font-bold title-font tracking-[-2px] text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-400 to-pink-500 drop-shadow-lg">
+                    SIAM<span class="text-white tracking-normal">IPTV</span>
                 </h1>
-                <p class="text-xs text-zinc-400 mt-1 tracking-[1px]">PREMIUM CINEMA EXPERIENCE</p>
+                <p class="text-xs text-zinc-400 mt-1 tracking-[1px] font-medium">PREMIUM CINEMA EXPERIENCE</p>
             </div>
 
             <div class="flex p-2 mx-3 mt-4 bg-zinc-800/50 rounded-2xl">
@@ -56,8 +49,7 @@
             </div>
 
             <div class="px-5 mt-3">
-                <input type="text" id="search-box" oninput="searchChannels()" placeholder="Search channels..." 
-                       class="w-full bg-zinc-800 border border-white/10 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:border-red-500">
+                <input type="text" id="search-box" oninput="searchChannels()" placeholder="Search channels..." class="w-full bg-zinc-800 border border-white/10 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:border-red-500">
             </div>
 
             <div id="channel-list" class="flex-1 overflow-y-auto p-3 space-y-2"></div>
@@ -65,162 +57,12 @@
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col">
-
-            <!-- Mobile Top Bar -->
-            <div class="md:hidden bg-zinc-900 p-4 flex items-center justify-between border-b border-white/10">
-                <h1 class="text-2xl font-bold title-font logo-text">SIAM<span class="text-red-500">IPTV</span></h1>
-                <button onclick="toggleSidebar()" class="text-3xl">☰</button>
-            </div>
-
-            <header class="hidden md:flex h-14 border-b border-white/10 bg-zinc-900/80 glass items-center px-6 justify-between">
+            <header class="h-14 border-b border-white/10 bg-zinc-900/80 glass flex items-center px-6 justify-between">
                 <div id="now-playing" class="text-sm text-zinc-400">Select a channel to start watching</div>
                 <div class="flex items-center gap-4">
                     <a href="https://t.me/Mr_Ooliver" target="_blank" class="bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-2 rounded-2xl text-xs font-bold">TELEGRAM</a>
+                    <button onclick="toggleTheme()" class="w-9 h-9 flex items-center justify-center rounded-2xl bg-zinc-800 hover:bg-zinc-700">🌙</button>
                 </div>
-            </header>
-
-            <!-- Live TV -->
-            <main id="tv-page-section" class="flex-1 p-3 md:p-6 flex items-center justify-center bg-black">
-                <div class="w-full max-w-5xl aspect-video bg-zinc-950 rounded-3xl overflow-hidden border border-red-500/30 shadow-2xl">
-                    <video id="iptv-player" class="w-full h-full" controls autoplay></video>
-                </div>
-            </main>
-
-            <!-- Movie Theater -->
-            <main id="movie-page-section" class="hidden flex-1 p-4 md:p-6 overflow-y-auto">
-                <h2 class="text-2xl md:text-3xl font-bold mb-6 title-font">🍿 Movie Theater</h2>
-                <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6"></div>
-            </main>
-        </div>
-    </div>
-
-    <script>
-        let allChannels = [];
-        let currentCategory = 'All';
-        let hlsTvInstance = null;
-        let hlsMovieInstance = null;
-
-        const tvVideo = document.getElementById('iptv-player');
-        const movieVideo = document.getElementById('movie-player');
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('hidden');
-            sidebar.classList.toggle('flex');
-        }
-
-        function loadChannelData() {
-            fetch('channels.json')
-                .then(res => res.json())
-                .then(data => {
-                    allChannels = data;
-                    renderList();
-                    const firstTv = allChannels.find(ch => ch.category !== 'Movies');
-                    if (firstTv) playChannel(firstTv.url, firstTv.name);
-                })
-                .catch(err => console.error("channels.json লোড করতে সমস্যা:", err));
-        }
-
-        function renderList() {
-            const container = document.getElementById('channel-list');
-            container.innerHTML = '';
-
-            const filtered = allChannels
-                .filter(ch => ch.category !== 'Movies')
-                .filter(ch => currentCategory === 'All' || ch.category === currentCategory)
-                .filter(ch => ch.name.toLowerCase().includes(document.getElementById('search-box').value.toLowerCase()));
-
-            filtered.forEach((ch, i) => {
-                const div = document.createElement('div');
-                div.className = `flex items-center gap-3 p-3 rounded-2xl cursor-pointer bg-zinc-800 hover:bg-zinc-700 transition-all`;
-                div.innerHTML = `
-                    <span class="text-red-500 font-mono w-6">${i+1}</span>
-                    <img src="${ch.logo}" class="w-10 h-10 rounded-lg object-cover" onerror="this.src='https://placehold.co/40x40?text=TV'">
-                    <span class="flex-1 truncate font-medium">${ch.name}</span>
-                `;
-                div.onclick = () => playChannel(ch.url, ch.name);
-                container.appendChild(div);
-            });
-        }
-
-        function playChannel(url, name) {
-            document.getElementById('now-playing').innerHTML = `▶ Now Playing: <span class="text-red-400">${name}</span>`;
-            if (hlsTvInstance) hlsTvInstance.destroy();
-            
-            if (Hls.isSupported()) {
-                hlsTvInstance = new Hls();
-                hlsTvInstance.loadSource(url);
-                hlsTvInstance.attachMedia(tvVideo);
-            } else {
-                tvVideo.src = url;
-            }
-        }
-
-        function renderMovieGrid() {
-            const grid = document.getElementById('movie-grid');
-            grid.innerHTML = '';
-            const movies = allChannels.filter(ch => ch.category === 'Movies');
-
-            movies.forEach(movie => {
-                const div = document.createElement('div');
-                div.className = `movie-card group cursor-pointer rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 hover:border-red-500 transition-all`;
-                div.innerHTML = `
-                    <div class="relative aspect-[2/3] overflow-hidden">
-                        <img src="${movie.logo}" class="w-full h-full object-cover" loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 flex items-end p-4">
-                            <span class="bg-red-600 text-white text-xs font-bold px-5 py-2 rounded-full">▶ WATCH NOW</span>
-                        </div>
-                    </div>
-                    <div class="p-3">
-                        <h4 class="font-semibold line-clamp-2">${movie.name}</h4>
-                    </div>
-                `;
-                div.onclick = () => playMovie(movie.url, movie.name);
-                grid.appendChild(div);
-            });
-        }
-
-        function playMovie(url, name) {
-            const container = document.getElementById('movie-theater-player-container');
-            document.getElementById('movie-playing-title').textContent = name;
-            container.classList.remove('hidden');
-
-            if (hlsMovieInstance) hlsMovieInstance.destroy();
-
-            if (url.includes('.m3u8')) {
-                hlsMovieInstance = new Hls();
-                hlsMovieInstance.loadSource(url);
-                hlsMovieInstance.attachMedia(movieVideo);
-            } else {
-                movieVideo.src = url;
-            }
-            movieVideo.play().catch(() => {});
-        }
-
-        function closeMoviePlayer() {
-            movieVideo.pause();
-            document.getElementById('movie-theater-player-container').classList.add('hidden');
-        }
-
-        function switchTab(tab) {
-            document.getElementById('tv-page-section').classList.toggle('hidden', tab !== 'tv');
-            document.getElementById('movie-page-section').classList.toggle('hidden', tab !== 'movies');
-            if (tab === 'movies') renderMovieGrid();
-        }
-
-        function filterCategory(cat) {
-            currentCategory = cat;
-            renderList();
-        }
-
-        function searchChannels() {
-            renderList();
-        }
-
-        window.onload = loadChannelData;
-    </script>
-</body>
-</html>                </div>
             </header>
 
             <!-- Live TV -->
