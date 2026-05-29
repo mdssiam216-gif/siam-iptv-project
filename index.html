@@ -11,58 +11,197 @@
         
         body { font-family: 'Inter', sans-serif; }
         .title-font { font-family: 'Space Grotesk', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .neon-glow { box-shadow: 0 0 20px -5px rgb(255 0 51 / 0.6); }
-        .movie-card:hover img { transform: scale(1.08); transition: all 0.4s ease; }
+        .glass { background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); }
+        
+        .logo-glow {
+            text-shadow: 0 0 20px rgb(239 68 68 / 0.8);
+        }
     </style>
 </head>
 <body class="bg-zinc-950 text-white min-h-screen">
 
-    <div class="flex h-screen">
-        <!-- Sidebar -->
-        <div class="w-80 border-r border-white/10 bg-zinc-900/70 glass flex flex-col">
+    <div class="flex h-screen flex-col md:flex-row">
+
+        <!-- ==================== SIDEBAR ==================== -->
+        <div id="sidebar" class="w-full md:w-80 bg-zinc-900 border-r border-white/10 flex flex-col md:relative absolute inset-0 z-50 md:z-auto hidden md:flex">
+            
+            <!-- Logo -->
             <div class="p-5 border-b border-white/10">
-                <h1 class="text-4xl font-bold title-font tracking-[-3px] 
-                           bg-gradient-to-r from-white via-red-400 to-white 
-                           bg-clip-text text-transparent drop-shadow-xl">
+                <h1 class="text-4xl font-bold title-font tracking-[-2px] logo-glow">
                     SIAM<span class="text-red-500">IPTV</span>
                 </h1>
-                <p class="text-[10px] text-zinc-500 mt-1 tracking-[2px] font-medium">PREMIUM CINEMA EXPERIENCE</p>
+                <p class="text-xs text-zinc-500 mt-1 tracking-widest">PREMIUM CINEMA EXPERIENCE</p>
             </div>
 
-            <div class="flex p-2 mx-3 mt-4 bg-zinc-800/50 rounded-2xl">
-                <button onclick="switchTab('tv')" id="tab-tv-btn" class="flex-1 py-3 rounded-xl font-semibold text-sm bg-red-600 text-white">📺 LIVE TV</button>
-                <button onclick="switchTab('movies')" id="tab-movies-btn" class="flex-1 py-3 rounded-xl font-semibold text-sm text-zinc-400 hover:text-white">🎥 MOVIES</button>
+            <!-- Tabs -->
+            <div class="p-4 flex gap-2 border-b border-white/10">
+                <button onclick="switchTab('tv')" id="tab-tv-btn" 
+                    class="flex-1 py-3 rounded-2xl font-semibold bg-red-600 text-white">📺 LIVE TV</button>
+                <button onclick="switchTab('movies')" id="tab-movies-btn"
+                    class="flex-1 py-3 rounded-2xl font-semibold bg-zinc-800 hover:bg-zinc-700">🎥 MOVIES</button>
             </div>
 
-            <div class="px-5 py-4 flex items-center justify-between border-b border-white/10">
+            <!-- Counter -->
+            <div class="px-5 py-4 flex justify-between items-center border-b border-white/10">
                 <div class="flex items-center gap-2">
                     <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                     <span class="text-sm">লাইভ দেখছেন</span>
                 </div>
-                <div class="bg-zinc-800 px-4 py-1 rounded-full text-green-400 text-sm font-bold">2,347</div>
+                <div class="bg-emerald-950 text-emerald-400 px-4 py-1 rounded-full text-sm font-bold">2,347</div>
             </div>
 
-            <div class="px-5 pt-4 flex gap-2 overflow-x-auto">
-                <button onclick="filterCategory('All')" class="px-5 py-1.5 bg-red-600 text-xs font-bold rounded-full">ALL</button>
-                <button onclick="filterCategory('Sports')" class="px-5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium rounded-full">SPORTS</button>
-                <button onclick="filterCategory('News')" class="px-5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium rounded-full">NEWS</button>
-                <button onclick="filterCategory('Entertainment')" class="px-5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium rounded-full">ENTERTAINMENT</button>
+            <!-- Categories -->
+            <div class="p-4 flex gap-2 overflow-x-auto">
+                <button onclick="filterCategory('All')" class="px-5 py-2 bg-red-600 text-xs font-bold rounded-2xl">ALL</button>
+                <button onclick="filterCategory('Sports')" class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium rounded-2xl">SPORTS</button>
+                <button onclick="filterCategory('News')" class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium rounded-2xl">NEWS</button>
+                <button onclick="filterCategory('Entertainment')" class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium rounded-2xl">ENTERTAINMENT</button>
             </div>
 
-            <div class="px-5 mt-3">
-                <input type="text" id="search-box" oninput="searchChannels()" placeholder="Search channels..." class="w-full bg-zinc-800 border border-white/10 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:border-red-500">
+            <!-- Search -->
+            <div class="px-4 pb-3">
+                <input type="text" id="search-box" oninput="searchChannels()" 
+                    placeholder="Search channels..." 
+                    class="w-full bg-zinc-800 border border-white/10 rounded-2xl px-5 py-3 text-sm focus:border-red-500 focus:outline-none">
             </div>
 
+            <!-- Channel List -->
             <div id="channel-list" class="flex-1 overflow-y-auto p-3 space-y-2"></div>
         </div>
 
-        <!-- Main Content (আগের মতোই) -->
+        <!-- ==================== MAIN CONTENT ==================== -->
         <div class="flex-1 flex flex-col">
-            <header class="h-14 border-b border-white/10 bg-zinc-900/80 glass flex items-center px-6 justify-between">
-                <div id="now-playing" class="text-sm text-zinc-400">Select a channel to start watching</div>
-                <div class="flex items-center gap-4">
-                    <a href="https://t.me/Mr_Ooliver" target="_blank" class="bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-2 rounded-2xl text-xs font-bold">TELEGRAM</a>
+
+            <!-- Mobile Top Bar -->
+            <div class="md:hidden bg-zinc-900 p-4 flex items-center justify-between border-b border-white/10">
+                <h1 class="text-2xl font-bold title-font logo-glow">SIAM<span class="text-red-500">IPTV</span></h1>
+                <button onclick="toggleSidebar()" class="text-3xl">☰</button>
+            </div>
+
+            <!-- Player Area -->
+            <main id="tv-page-section" class="flex-1 p-3 md:p-6 flex items-center justify-center bg-black">
+                <div class="w-full max-w-[1100px] aspect-video bg-zinc-900 rounded-3xl overflow-hidden border border-red-500/30 shadow-2xl">
+                    <video id="iptv-player" class="w-full h-full" controls autoplay></video>
+                </div>
+            </main>
+
+            <!-- Movie Theater -->
+            <main id="movie-page-section" class="hidden flex-1 p-4 md:p-6 overflow-y-auto">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 title-font">🍿 Movie Theater</h2>
+                <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6"></div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        let allChannels = [];
+        let currentCategory = 'All';
+        let hlsTvInstance = null;
+        let hlsMovieInstance = null;
+
+        const tvVideo = document.getElementById('iptv-player');
+        const movieVideo = document.getElementById('movie-player');
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+            sidebar.classList.toggle('flex');
+        }
+
+        function loadChannelData() {
+            fetch('channels.json')
+                .then(res => res.json())
+                .then(data => {
+                    allChannels = data;
+                    renderList();
+                    const first = allChannels.find(ch => ch.category !== 'Movies');
+                    if (first) playChannel(first.url, first.name);
+                });
+        }
+
+        function renderList() {
+            const container = document.getElementById('channel-list');
+            container.innerHTML = '';
+
+            const filtered = allChannels
+                .filter(ch => ch.category !== 'Movies')
+                .filter(ch => currentCategory === 'All' || ch.category === currentCategory)
+                .filter(ch => ch.name.toLowerCase().includes(document.getElementById('search-box').value.toLowerCase()));
+
+            filtered.forEach((ch, i) => {
+                const div = document.createElement('div');
+                div.className = `flex items-center gap-3 p-3 rounded-2xl cursor-pointer bg-zinc-800 hover:bg-zinc-700 transition`;
+                div.innerHTML = `
+                    <span class="text-red-500 font-mono">${i+1}</span>
+                    <img src="${ch.logo}" class="w-9 h-9 rounded-lg object-cover" onerror="this.src='https://placehold.co/36x36'">
+                    <span class="flex-1 truncate">${ch.name}</span>
+                `;
+                div.onclick = () => { playChannel(ch.url, ch.name); if(window.innerWidth < 768) toggleSidebar(); };
+                container.appendChild(div);
+            });
+        }
+
+        function playChannel(url, name) {
+            document.getElementById('now-playing').innerHTML = `▶ ${name}`;
+            if (hlsTvInstance) hlsTvInstance.destroy();
+            
+            if (Hls.isSupported()) {
+                hlsTvInstance = new Hls();
+                hlsTvInstance.loadSource(url);
+                hlsTvInstance.attachMedia(tvVideo);
+            } else {
+                tvVideo.src = url;
+            }
+        }
+
+        function renderMovieGrid() {
+            const grid = document.getElementById('movie-grid');
+            grid.innerHTML = '';
+
+            const movies = allChannels.filter(m => m.category === 'Movies');
+            movies.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = `movie-card rounded-2xl overflow-hidden bg-zinc-900 cursor-pointer hover:scale-105 transition`;
+                card.innerHTML = `
+                    <div class="relative aspect-[2/3]">
+                        <img src="${movie.logo}" class="w-full h-full object-cover" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 flex items-end p-3">
+                            <span class="text-xs bg-red-600 px-3 py-1 rounded-full">WATCH</span>
+                        </div>
+                    </div>
+                    <div class="p-3 text-sm font-medium">${movie.name}</div>
+                `;
+                card.onclick = () => playMovie(movie.url, movie.name);
+                grid.appendChild(card);
+            });
+        }
+
+        function playMovie(url, name) {
+            const container = document.getElementById('movie-theater-player-container') || createMoviePlayer();
+            // Simple alert for now (you can expand later)
+            alert(`Playing: ${name}\n\nLink: ${url}`);
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tv-page-section').classList.toggle('hidden', tab !== 'tv');
+            document.getElementById('movie-page-section').classList.toggle('hidden', tab !== 'movies');
+            if (tab === 'movies') renderMovieGrid();
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            renderList();
+        }
+
+        function searchChannels() {
+            renderList();
+        }
+
+        // Init
+        window.onload = loadChannelData;
+    </script>
+</body>
+</html>                    <a href="https://t.me/Mr_Ooliver" target="_blank" class="bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-2 rounded-2xl text-xs font-bold">TELEGRAM</a>
                     <button onclick="toggleTheme()" class="w-9 h-9 flex items-center justify-center rounded-2xl bg-zinc-800 hover:bg-zinc-700">🌙</button>
                 </div>
             </header>
