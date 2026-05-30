@@ -7,102 +7,331 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-        
-        body { font-family: 'Inter', sans-serif; }
-        .title-font { font-family: 'Space Grotesk', sans-serif; }
-        
-        .custom-player {
-            background: #0a0a0a;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.5);
+        html { scroll-behavior: smooth; }
+        body, div, header, footer, input, button {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
-        
-        .player-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            padding: 20px;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-        
-        .custom-player:hover .player-overlay {
-            opacity: 1;
+        .movie-card:hover img {
+            transform: scale(1.05);
         }
     </style>
 </head>
-<body class="bg-[#0d1117] text-white min-h-screen">
+<body id="theme-body" class="font-sans antialiased flex flex-col min-h-screen bg-[#0d1117] text-white">
+    
+    <!-- 📺 মেইন সাইট কন্টেন্ট -->
+    <div id="main-content" class="flex-1 flex flex-col min-h-screen">
+       
+        <!-- 🧭 নেভিগেশন বার -->
+        <header id="theme-header" class="border-b border-gray-800 p-4 bg-[#161b22] flex flex-col sm:flex-row gap-4 justify-between items-center shrink-0">
+            <div class="flex items-center gap-4">
+                <h1 class="text-xl font-bold tracking-wider text-red-500">SIAM IPTV <span id="theme-badge" class="text-white text-sm bg-gray-700 px-2 py-0.5 rounded ml-1">PROJECT</span></h1>
+               
+                <nav class="flex bg-[#0d1117] p-1 rounded-lg border border-gray-800">
+                    <button onclick="switchTab('tv')" id="tab-tv-btn" class="px-4 py-1.5 rounded-md text-xs font-bold bg-red-600 text-white transition cursor-pointer">📺 Live TV</button>
+                    <button onclick="switchTab('movies')" id="tab-movies-btn" class="px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition cursor-pointer">🎬 Movie Theater</button>
+                </nav>
+            </div>
+           
+            <div class="flex items-center gap-3">
+                <a href="https://t.me/Mr_Ooliver" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-xs px-3 py-1.5 rounded font-bold text-white">TELEGRAM</a>
+                <button onclick="toggleTheme()" id="theme-btn" class="p-1.5 bg-zinc-800 border border-zinc-700 rounded-md hover:bg-zinc-700 cursor-pointer text-sm" title="Toggle Light/Dark Mode">🌙</button>
+            </div>
+        </header>
 
-    <div class="flex h-screen">
-
-        <!-- Sidebar (আগের মতো রাখা হয়েছে) -->
-        <div class="w-80 border-r border-white/10 bg-zinc-900/70 glass flex flex-col hidden md:flex">
-            <!-- তোমার আগের সাইডবার কোড এখানে রাখো -->
-            <!-- ... (আগের সাইডবার কোড) ... -->
-        </div>
-
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
-
-            <!-- Custom Player -->
-            <main id="tv-page-section" class="flex-1 p-4 md:p-8 flex items-center justify-center bg-black">
-                <div class="custom-player w-full max-w-5xl aspect-video relative">
+        <!-- ================= [ ১. লাইভ টিভি পেজ ] ================= -->
+        <main id="tv-page-section" class="flex flex-col lg:flex-row flex-1 overflow-hidden">
+            <div id="video-section" class="flex-1 bg-black flex flex-col justify-center items-center p-4 overflow-y-auto lg:overflow-hidden">
+                <div class="text-center mb-4 md:mb-6 px-4">
+                    <h2 id="theme-title" class="text-xl md:text-3xl font-bold text-white drop-shadow-md">
+                        স্বাগতম সিয়ামের লাইভ টিভি প্ল্যাটফর্মে! 📺
+                    </h2>
+                    <p id="theme-subtitle" class="text-xs md:text-sm text-gray-400 mt-2 font-medium tracking-wide">
+                        বাফারিং ছাড়া একদম ফুল এইচডি-তে লাইভ খেলা ও বিনোদন উপভোগ করুন।
+                    </p>
+                </div>
+                <div id="theme-player-box" class="w-full max-w-4xl aspect-video bg-zinc-900 rounded-lg overflow-hidden shadow-2xl border border-zinc-800">
                     <video id="iptv-player" class="w-full h-full" controls autoplay></video>
-                    
-                    <!-- Custom Overlay -->
-                    <div class="player-overlay">
-                        <div class="flex justify-between items-end">
-                            <div>
-                                <p id="now-playing" class="text-white text-lg font-semibold"></p>
-                                <p class="text-zinc-400 text-sm">SIAM IPTV • LIVE</p>
-                            </div>
-                            <div class="flex gap-3">
-                                <button onclick="toggleFullscreen()" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm">⛶ Fullscreen</button>
-                            </div>
-                        </div>
+                </div>
+                <div id="theme-notice" class="w-full max-w-4xl mt-4 bg-red-950/40 border border-red-900/50 rounded-md flex items-center overflow-hidden h-9">
+                    <div class="bg-red-600 text-white font-bold text-xs md:text-sm px-3 py-2 uppercase tracking-wider whitespace-nowrap z-10 animate-pulse">
+                        📢 নোটিশ:
+                    </div>
+                    <marquee id="theme-marquee" class="text-xs md:text-sm text-red-200 font-medium tracking-wide" scrollamount="5" onmouseover="this.stop();" onmouseout="this.start();">
+                        বাফারিং ছাড়াই ফুল এইচডি কোয়ালিটিতে দেখতে চোখ রাখুন সিয়ামের লাইভ টিভিতে। নতুন চ্যানেলের রিকোয়েস্ট করতে টেলিগ্রামে মেসেজ করুন।
+                    </marquee>
+                </div>
+                <p id="now-playing" class="mt-3 text-gray-400 font-semibold text-lg">Select a Channel to Play</p>
+            </div>
+
+            <!-- সাইডবার -->
+            <div id="theme-sidebar" class="w-full lg:w-96 bg-[#161b22] border-t lg:border-t-0 lg:border-l border-gray-800 flex flex-col h-[50vh] lg:h-auto">
+                <div id="theme-counter-bar" class="p-3 border-b border-gray-800 flex justify-between items-center bg-zinc-900/40">
+                    <span id="theme-counter-text" class="text-sm font-semibold text-gray-300 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        লাইভ দেখছেন:
+                    </span>
+                    <div id="theme-counter-box" class="bg-zinc-800 px-2.5 py-1 rounded text-sm font-bold text-green-400 border border-zinc-700">
+                        <script type="text/javascript" src="//counter.websiteout.net/js/5/0/0/1"></script>
                     </div>
                 </div>
-            </main>
+                <div id="theme-category-bar" class="p-3 border-b border-gray-800 flex gap-1.5 overflow-x-auto text-xs shrink-0">
+                    <button onclick="filterCategory('All')" class="bg-red-600 px-3 py-1.5 rounded-md font-bold cursor-pointer text-white">All Channels</button>
+                    <button onclick="filterCategory('Sports')" id="btn-sports" class="bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-md font-medium cursor-pointer text-white">Sports</button>
+                    <button onclick="filterCategory('News')" id="btn-news" class="bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-md font-medium cursor-pointer text-white">News</button>
+                    <button onclick="filterCategory('Entertainment')" id="btn-ent" class="bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-md font-medium cursor-pointer text-white">Entertainment</button>
+                </div>
+                <div id="theme-search-bar" class="p-3 border-b border-gray-800 shrink-0">
+                    <input type="text" id="search-box" oninput="searchChannels()" placeholder="Search channels..." class="w-full bg-[#0d1117] border border-gray-800 rounded-md p-2 text-sm text-white focus:outline-none focus:border-red-500">
+                </div>
+                <div id="channel-list" class="flex-1 overflow-y-auto p-3 space-y-2"></div>
+            </div>
+        </main>
 
-            <!-- Movie Section -->
-            <main id="movie-page-section" class="hidden flex-1 p-6 overflow-y-auto">
-                <!-- তোমার মুভি সেকশন -->
-            </main>
+        <!-- ================= [ ২. মুভি থিয়েটার ] ================= -->
+        <main id="movie-page-section" class="hidden flex-1 flex flex-col p-4 md:p-6 overflow-y-auto max-w-7xl w-full mx-auto">
+            <div id="movie-theater-player-container" class="hidden mb-8 w-full bg-black rounded-xl overflow-hidden shadow-2xl border border-zinc-800 p-2">
+                <div class="flex justify-between items-center p-2 text-sm">
+                    <span id="movie-playing-title" class="font-bold text-red-500">🎬 Now Playing: Movie Name</span>
+                    <button onclick="closeMoviePlayer()" class="text-xs bg-zinc-800 hover:bg-red-600 px-2.5 py-1 rounded text-white font-bold transition cursor-pointer">❌ Close Player</button>
+                </div>
+                <div class="w-full aspect-video bg-zinc-950 rounded-lg overflow-hidden">
+                    <video id="movie-player" class="w-full h-full" controls></video>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-800 pb-4">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-wide text-white">🍿 সিয়ামের মুভি গ্যালারি (Movie Theater)</h2>
+                    <p class="text-xs text-gray-400 mt-1">আপনার পছন্দের যেকোনো মুভি যখন খুশি তখন ওয়ান-ক্লিক প্লে করে উপভোগ করুন।</p>
+                </div>
+                <div class="w-full md:w-72">
+                    <input type="text" id="movie-search-box" oninput="renderMovieGrid()" placeholder="Search movies by name..." class="w-full bg-[#161b22] border border-gray-800 rounded-md p-2 text-sm text-white focus:outline-none focus:border-red-500">
+                </div>
+            </div>
+
+            <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+                <!-- মুভি জাভাস্ক্রিপ্ট দিয়ে লোড হবে -->
+            </div>
+        </main>
+
+        <footer id="theme-footer" class="bg-[#0d1117] border-t border-gray-800 p-3 text-center text-xs md:text-sm text-gray-400 flex flex-wrap justify-center items-center gap-4 shrink-0">
+            <button onclick="toggleDisclaimer()" class="hover:text-white transition cursor-pointer flex items-center gap-1 font-medium">© Copyright Disclaimer</button>
+            <span class="text-gray-700">|</span>
+            <a href="https://t.me/Mr_Ooliver" target="_blank" class="text-blue-400 hover:text-blue-300 transition flex items-center gap-1 font-bold">✈ TELEGRAM</a>
+        </footer>
+    </div>
+
+    <!-- ডিসক্লেইমার -->
+    <div id="disclaimer-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-xs flex justify-center items-center p-4 z-50">
+        <div id="theme-modal-card" class="bg-[#161b22] border border-gray-800 rounded-xl max-w-md w-full p-5 shadow-2xl relative">
+            <h3 class="text-base font-bold text-red-500 mb-3 flex items-center gap-2">⚠️ Copyright Disclaimer</h3>
+            <p id="theme-modal-text" class="text-xs md:text-sm text-gray-300 leading-relaxed">
+                SIAM IPTV Project does not host, stream, or store any of the video content or channels available on this website. All streaming links are aggregated from publicly accessible, third-party websites on the internet.
+            </p>
+            <div class="mt-4 flex justify-end">
+                <button onclick="toggleDisclaimer()" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs px-4 py-2 rounded-md font-semibold cursor-pointer transition">Close</button>
+            </div>
         </div>
     </div>
 
     <script>
+        let allChannels = [];
+        let currentCategory = 'All';
+        const tvVideoElement = document.getElementById('iptv-player');
+        const movieVideoElement = document.getElementById('movie-player');
         let hlsTvInstance = null;
-        const tvVideo = document.getElementById('iptv-player');
+        let hlsMovieInstance = null;
+        let isLightMode = false;
 
-        function playChannel(url, name) {
-            document.getElementById('now-playing').innerHTML = `▶ ${name}`;
-            
-            if (hlsTvInstance) hlsTvInstance.destroy();
-            
+        // 🔄 ট্যাব সুইচ
+        function switchTab(tab) {
+            const tvBtn = document.getElementById('tab-tv-btn');
+            const moviesBtn = document.getElementById('tab-movies-btn');
+            const tvSection = document.getElementById('tv-page-section');
+            const movieSection = document.getElementById('movie-page-section');
+
+            tvVideoElement.pause();
+            movieVideoElement.pause();
+
+            if (tab === 'tv') {
+                tvSection.classList.remove('hidden');
+                movieSection.classList.add('hidden');
+                tvBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold bg-red-600 text-white transition cursor-pointer";
+                moviesBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition cursor-pointer";
+            } else {
+                tvSection.classList.add('hidden');
+                movieSection.classList.remove('hidden');
+                moviesBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold bg-red-600 text-white transition cursor-pointer";
+                tvBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition cursor-pointer";
+                renderMovieGrid();
+            }
+        }
+
+        function toggleTheme() {
+            isLightMode = !isLightMode;
+            localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+            applyTheme();
+        }
+
+        function applyTheme() {
+            // (আগের থিম কোড একই আছে, এখানে সংক্ষেপে রাখা হয়েছে)
+            const body = document.getElementById('theme-body');
+            if (isLightMode) {
+                body.className = "font-sans antialiased flex flex-col min-h-screen bg-gray-100 text-gray-900";
+            } else {
+                body.className = "font-sans antialiased flex flex-col min-h-screen bg-[#0d1117] text-white";
+            }
+            renderList(allChannels);
+            renderMovieGrid();
+        }
+
+        function toggleDisclaimer() {
+            document.getElementById('disclaimer-modal').classList.toggle('hidden');
+        }
+
+        function loadChannelData() {
+            fetch('channels.json')
+                .then(res => res.json())
+                .then(data => {
+                    allChannels = data;
+                    const savedTheme = localStorage.getItem('theme');
+                    if (savedTheme === 'light') isLightMode = true;
+                    applyTheme();
+
+                    const tvOnly = data.filter(ch => ch.category !== 'Movies');
+                    if(tvOnly.length > 0) playChannel(tvOnly[0].url, tvOnly[0].name, false);
+                })
+                .catch(err => console.error("Error loading JSON:", err));
+        }
+
+        function renderList(channels) {
+            const listContainer = document.getElementById('channel-list');
+            listContainer.innerHTML = '';
+
+            const tvChannels = channels.filter(ch => ch.category !== 'Movies');
+            const filtered = tvChannels.filter(ch => (currentCategory === 'All' || ch.category === currentCategory));
+            const query = document.getElementById('search-box').value.toLowerCase();
+            const finalChannels = filtered.filter(ch => ch.name.toLowerCase().includes(query));
+
+            if (finalChannels.length === 0) {
+                listContainer.innerHTML = '<p class="text-gray-500 text-sm text-center mt-4">No channels found</p>';
+                return;
+            }
+
+            const itemBgClass = isLightMode ? 'bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-900' : 'bg-zinc-900/50 hover:bg-zinc-800 border-gray-800 text-white';
+            const imgBgClass = isLightMode ? 'bg-gray-200 border-gray-300' : 'bg-zinc-800 border-zinc-700';
+
+            finalChannels.forEach((ch, index) => {
+                listContainer.innerHTML += `
+                    <div onclick="playChannel('${ch.url}', '${ch.name}', true)" class="flex items-center gap-3 p-2.5 border rounded-md cursor-pointer transition-all hover:scale-[1.01] ${itemBgClass}">
+                        <span class="text-xs font-bold text-red-500 w-4">${index + 1}</span>
+                        <img src="${ch.logo}" class="w-8 h-8 rounded object-cover border ${imgBgClass}" onerror="this.src='https://placehold.co/50x50?text=TV'">
+                        <span class="text-sm font-medium tracking-wide flex-1 truncate">${ch.name}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function renderMovieGrid() {
+            const movieGrid = document.getElementById('movie-grid');
+            movieGrid.innerHTML = '';
+
+            const movies = allChannels.filter(ch => ch.category === 'Movies');
+            const query = document.getElementById('movie-search-box').value.toLowerCase();
+            const finalMovies = movies.filter(m => m.name.toLowerCase().includes(query));
+
+            if (finalMovies.length === 0) {
+                movieGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 text-sm p-8">😔 কোনো মুভি পাওয়া যায়নি!</div>';
+                return;
+            }
+
+            const cardBg = isLightMode ? 'bg-white border-gray-300 text-gray-900 shadow-md' : 'bg-[#161b22] border-gray-800 text-white shadow-xl';
+
+            finalMovies.forEach(movie => {
+                const posterUrl = movie.logo && movie.logo !== "" ? movie.logo : 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=300';
+                movieGrid.innerHTML += `
+                    <div onclick="playMovie('${movie.url}', '${movie.name}')" class="movie-card group cursor-pointer border rounded-xl overflow-hidden transition-all duration-300 flex flex-col h-full ${cardBg}">
+                        <div class="w-full aspect-[2/3] overflow-hidden bg-black relative">
+                            <img src="${posterUrl}" class="w-full h-full object-cover transition-transform duration-500" loading="lazy">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex justify-center items-center">
+                                <span class="bg-red-600 p-3 rounded-full text-white font-bold text-lg shadow-lg">▶</span>
+                            </div>
+                        </div>
+                        <div class="p-3 flex-1 flex flex-col justify-between">
+                            <h4 class="text-sm font-bold tracking-wide line-clamp-2">${movie.name}</h4>
+                            <span class="text-[10px] uppercase font-bold tracking-wider text-red-500 mt-2 block">Watch Now</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function playChannel(url, name, shouldScroll = true) {
+            document.getElementById('now-playing').innerText = "⚡ Now Playing: " + name;
+           
             if (Hls.isSupported()) {
+                if (hlsTvInstance) hlsTvInstance.destroy();
                 hlsTvInstance = new Hls();
                 hlsTvInstance.loadSource(url);
-                hlsTvInstance.attachMedia(tvVideo);
-            } else {
-                tvVideo.src = url;
+                hlsTvInstance.attachMedia(tvVideoElement);
+            } else if (tvVideoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                tvVideoElement.src = url;
+            }
+
+            if (shouldScroll && window.innerWidth < 1024) {
+                document.getElementById('video-section').scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        function toggleFullscreen() {
-            const player = document.querySelector('.custom-player');
-            if (!document.fullscreenElement) {
-                player.requestFullscreen();
-            } else {
-                document.exitFullscreen();
+        function playMovie(url, name) {
+            const playerContainer = document.getElementById('movie-theater-player-container');
+            document.getElementById('movie-playing-title').innerText = "🎬 Now Playing: " + name;
+            playerContainer.classList.remove('hidden');
+
+            if (hlsMovieInstance) {
+                hlsMovieInstance.destroy();
+                hlsMovieInstance = null;
             }
+
+            movieVideoElement.pause();
+            movieVideoElement.removeAttribute('src');
+
+            if (url.includes('.m3u8')) {
+                if (Hls.isSupported()) {
+                    hlsMovieInstance = new Hls();
+                    hlsMovieInstance.loadSource(url);
+                    hlsMovieInstance.attachMedia(movieVideoElement);
+                } else {
+                    movieVideoElement.src = url;
+                }
+            } else {
+                movieVideoElement.src = url;
+            }
+
+            movieVideoElement.load();
+            movieVideoElement.play().catch(() => {});
+            playerContainer.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // বাকি সব ফাংশন (loadChannelData, renderList, switchTab ইত্যাদি) আগের মতো রাখো
+        function closeMoviePlayer() {
+            movieVideoElement.pause();
+            movieVideoElement.removeAttribute('src');
+            document.getElementById('movie-theater-player-container').classList.add('hidden');
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            renderList(allChannels);
+        }
+
+        function searchChannels() {
+            renderList(allChannels);
+        }
+
+        // লোড হওয়ার পর সবকিছু শুরু করা
+        window.addEventListener('DOMContentLoaded', () => {
+            loadChannelData();
+        });
     </script>
 </body>
 </html>
