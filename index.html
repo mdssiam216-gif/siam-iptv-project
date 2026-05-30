@@ -20,6 +20,7 @@
 </head>
 <body class="antialiased">
 
+    <!-- Header -->
     <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-white/10">
         <h1 class="text-2xl font-bold tracking-tighter text-white">SIAM<span class="gradient-text">PREMIUM</span></h1>
         <div class="flex gap-2">
@@ -29,6 +30,7 @@
     </header>
 
     <main class="max-w-6xl mx-auto p-4 mt-6">
+        <!-- TV Section -->
         <div id="tv-section">
             <div class="grid lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2">
@@ -47,7 +49,11 @@
             </div>
         </div>
 
+        <!-- Movie Section -->
         <div id="movie-section" class="hidden">
+            <div class="flex justify-end mb-3 mr-4">
+                <a href="https://t.me/Mr_Ooliver" target="_blank" class="telegram-glow text-[10px] font-extrabold tracking-widest uppercase hover:scale-105 transition-transform">JOIN TELEGRAM</a>
+            </div>
             <div id="movie-player-box" class="hidden mb-8">
                 <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
                     <video id="movie-player" class="w-full h-full" controls></video>
@@ -67,7 +73,6 @@
                 renderCategories();
                 filterChannels('All');
                 
-                // Auto play first channel
                 const first = allChannels.find(c => c.category !== 'Movies');
                 if(first) playTv(first.url, first.name);
             } catch (e) { console.error("Error:", e); }
@@ -119,7 +124,6 @@
             video.play();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
         fetchData();
     </script>
 </body>
