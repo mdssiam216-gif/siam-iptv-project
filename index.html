@@ -11,6 +11,7 @@
         body { font-family: 'Inter', sans-serif; background: #050505; color: white; }
         .glass { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .gradient-text { background: linear-gradient(90deg, #ef4444, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .telegram-glow { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
         .movie-card { transition: all 0.3s ease; }
         .movie-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2); }
         ::-webkit-scrollbar { width: 5px; }
@@ -33,10 +34,10 @@
         <div id="tv-section">
             <div class="grid lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2">
-                    <!-- TELEGRAM Link placed above the video player on the right -->
-                    <div class="flex justify-end mb-2">
-                        <a href="https://t.me/Mr_Ooliver" target="_blank" class="text-[10px] text-white/50 hover:text-red-500 transition uppercase tracking-widest font-bold">
-                            TELEGRAM
+                    <!-- Adjusted Telegram Link -->
+                    <div class="flex justify-end mb-3">
+                        <a href="https://t.me/Mr_Ooliver" target="_blank" class="telegram-glow text-sm font-extrabold tracking-widest hover:scale-105 transition-transform uppercase">
+                            JOIN TELEGRAM
                         </a>
                     </div>
                     <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
