@@ -7,31 +7,43 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        html { scroll-behavior: smooth; }
-        body, div, header, footer, input, button {
-            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Poppins:wght@500;600;700&display=swap');
+       
+        body { 
+            font-family: 'Inter', sans-serif; 
         }
+        .title-font { 
+            font-family: 'Space Grotesk', sans-serif; 
+            letter-spacing: -0.04em;
+        }
+        .logo-font {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+        .glass { background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .movie-card:hover img {
             transform: scale(1.05);
         }
     </style>
 </head>
 <body id="theme-body" class="font-sans antialiased flex flex-col min-h-screen bg-[#0d1117] text-white">
-    
+   
     <!-- 📺 মেইন সাইট কন্টেন্ট -->
     <div id="main-content" class="flex-1 flex flex-col min-h-screen">
-       
+      
         <!-- 🧭 নেভিগেশন বার -->
         <header id="theme-header" class="border-b border-gray-800 p-4 bg-[#161b22] flex flex-col sm:flex-row gap-4 justify-between items-center shrink-0">
             <div class="flex items-center gap-4">
-                <h1 class="text-xl font-bold tracking-wider text-red-500">SIAM IPTV <span id="theme-badge" class="text-white text-sm bg-gray-700 px-2 py-0.5 rounded ml-1">PROJECT</span></h1>
-               
+                <h1 class="text-2xl font-bold logo-font tracking-tighter text-red-500">SIAM <span class="text-white">IPTV</span></h1>
+                <span id="theme-badge" class="text-white text-xs bg-gray-700 px-2 py-0.5 rounded font-medium">PROJECT</span>
+              
                 <nav class="flex bg-[#0d1117] p-1 rounded-lg border border-gray-800">
                     <button onclick="switchTab('tv')" id="tab-tv-btn" class="px-4 py-1.5 rounded-md text-xs font-bold bg-red-600 text-white transition cursor-pointer">📺 Live TV</button>
                     <button onclick="switchTab('movies')" id="tab-movies-btn" class="px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition cursor-pointer">🎬 Movie Theater</button>
                 </nav>
             </div>
-           
+          
             <div class="flex items-center gap-3">
                 <a href="https://t.me/Mr_Ooliver" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-xs px-3 py-1.5 rounded font-bold text-white">TELEGRAM</a>
                 <button onclick="toggleTheme()" id="theme-btn" class="p-1.5 bg-zinc-800 border border-zinc-700 rounded-md hover:bg-zinc-700 cursor-pointer text-sm" title="Toggle Light/Dark Mode">🌙</button>
@@ -42,7 +54,7 @@
         <main id="tv-page-section" class="flex flex-col lg:flex-row flex-1 overflow-hidden">
             <div id="video-section" class="flex-1 bg-black flex flex-col justify-center items-center p-4 overflow-y-auto lg:overflow-hidden">
                 <div class="text-center mb-4 md:mb-6 px-4">
-                    <h2 id="theme-title" class="text-xl md:text-3xl font-bold text-white drop-shadow-md">
+                    <h2 id="theme-title" class="text-xl md:text-3xl font-bold title-font text-white drop-shadow-md">
                         স্বাগতম সিয়ামের লাইভ টিভি প্ল্যাটফর্মে! 📺
                     </h2>
                     <p id="theme-subtitle" class="text-xs md:text-sm text-gray-400 mt-2 font-medium tracking-wide">
@@ -98,20 +110,16 @@
                     <video id="movie-player" class="w-full h-full" controls></video>
                 </div>
             </div>
-
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-800 pb-4">
                 <div>
-                    <h2 class="text-2xl font-bold tracking-wide text-white">🍿 সিয়ামের মুভি গ্যালারি (Movie Theater)</h2>
+                    <h2 class="text-2xl font-bold tracking-wide title-font text-white">🍿 সিয়ামের মুভি গ্যালারি</h2>
                     <p class="text-xs text-gray-400 mt-1">আপনার পছন্দের যেকোনো মুভি যখন খুশি তখন ওয়ান-ক্লিক প্লে করে উপভোগ করুন।</p>
                 </div>
                 <div class="w-full md:w-72">
                     <input type="text" id="movie-search-box" oninput="renderMovieGrid()" placeholder="Search movies by name..." class="w-full bg-[#161b22] border border-gray-800 rounded-md p-2 text-sm text-white focus:outline-none focus:border-red-500">
                 </div>
             </div>
-
-            <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-                <!-- মুভি জাভাস্ক্রিপ্ট দিয়ে লোড হবে -->
-            </div>
+            <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6"></div>
         </main>
 
         <footer id="theme-footer" class="bg-[#0d1117] border-t border-gray-800 p-3 text-center text-xs md:text-sm text-gray-400 flex flex-wrap justify-center items-center gap-4 shrink-0">
@@ -143,13 +151,12 @@
         let hlsMovieInstance = null;
         let isLightMode = false;
 
-        // 🔄 ট্যাব সুইচ
         function switchTab(tab) {
             const tvBtn = document.getElementById('tab-tv-btn');
             const moviesBtn = document.getElementById('tab-movies-btn');
             const tvSection = document.getElementById('tv-page-section');
             const movieSection = document.getElementById('movie-page-section');
-
+            
             tvVideoElement.pause();
             movieVideoElement.pause();
 
@@ -174,7 +181,6 @@
         }
 
         function applyTheme() {
-            // (আগের থিম কোড একই আছে, এখানে সংক্ষেপে রাখা হয়েছে)
             const body = document.getElementById('theme-body');
             if (isLightMode) {
                 body.className = "font-sans antialiased flex flex-col min-h-screen bg-gray-100 text-gray-900";
@@ -197,7 +203,6 @@
                     const savedTheme = localStorage.getItem('theme');
                     if (savedTheme === 'light') isLightMode = true;
                     applyTheme();
-
                     const tvOnly = data.filter(ch => ch.category !== 'Movies');
                     if(tvOnly.length > 0) playChannel(tvOnly[0].url, tvOnly[0].name, false);
                 })
@@ -207,12 +212,11 @@
         function renderList(channels) {
             const listContainer = document.getElementById('channel-list');
             listContainer.innerHTML = '';
-
             const tvChannels = channels.filter(ch => ch.category !== 'Movies');
             const filtered = tvChannels.filter(ch => (currentCategory === 'All' || ch.category === currentCategory));
             const query = document.getElementById('search-box').value.toLowerCase();
             const finalChannels = filtered.filter(ch => ch.name.toLowerCase().includes(query));
-
+            
             if (finalChannels.length === 0) {
                 listContainer.innerHTML = '<p class="text-gray-500 text-sm text-center mt-4">No channels found</p>';
                 return;
@@ -235,11 +239,10 @@
         function renderMovieGrid() {
             const movieGrid = document.getElementById('movie-grid');
             movieGrid.innerHTML = '';
-
             const movies = allChannels.filter(ch => ch.category === 'Movies');
             const query = document.getElementById('movie-search-box').value.toLowerCase();
             const finalMovies = movies.filter(m => m.name.toLowerCase().includes(query));
-
+            
             if (finalMovies.length === 0) {
                 movieGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 text-sm p-8">😔 কোনো মুভি পাওয়া যায়নি!</div>';
                 return;
@@ -268,7 +271,6 @@
 
         function playChannel(url, name, shouldScroll = true) {
             document.getElementById('now-playing').innerText = "⚡ Now Playing: " + name;
-           
             if (Hls.isSupported()) {
                 if (hlsTvInstance) hlsTvInstance.destroy();
                 hlsTvInstance = new Hls();
@@ -277,7 +279,6 @@
             } else if (tvVideoElement.canPlayType('application/vnd.apple.mpegurl')) {
                 tvVideoElement.src = url;
             }
-
             if (shouldScroll && window.innerWidth < 1024) {
                 document.getElementById('video-section').scrollIntoView({ behavior: 'smooth' });
             }
@@ -287,15 +288,12 @@
             const playerContainer = document.getElementById('movie-theater-player-container');
             document.getElementById('movie-playing-title').innerText = "🎬 Now Playing: " + name;
             playerContainer.classList.remove('hidden');
-
             if (hlsMovieInstance) {
                 hlsMovieInstance.destroy();
                 hlsMovieInstance = null;
             }
-
             movieVideoElement.pause();
             movieVideoElement.removeAttribute('src');
-
             if (url.includes('.m3u8')) {
                 if (Hls.isSupported()) {
                     hlsMovieInstance = new Hls();
@@ -307,7 +305,6 @@
             } else {
                 movieVideoElement.src = url;
             }
-
             movieVideoElement.load();
             movieVideoElement.play().catch(() => {});
             playerContainer.scrollIntoView({ behavior: 'smooth' });
@@ -328,7 +325,6 @@
             renderList(allChannels);
         }
 
-        // লোড হওয়ার পর সবকিছু শুরু করা
         window.addEventListener('DOMContentLoaded', () => {
             loadChannelData();
         });
