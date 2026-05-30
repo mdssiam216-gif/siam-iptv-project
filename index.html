@@ -21,9 +21,15 @@
 
     <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-white/10">
         <h1 class="text-2xl font-bold tracking-tighter text-white">SIAM<span class="gradient-text">PREMIUM</span></h1>
-        <div class="flex gap-2">
-            <button onclick="switchTab('tv')" id="tv-tab" class="px-5 py-2 bg-red-600 rounded-full text-xs font-bold transition shadow-[0_0_15px_rgba(220,38,38,0.5)]">LIVE TV</button>
-            <button onclick="switchTab('movies')" id="movie-tab" class="px-5 py-2 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition">MOVIES</button>
+        
+        <div class="flex items-center gap-6">
+            <a href="https://t.me/Mr_Ooliver" target="_blank" class="text-[10px] text-white/50 hover:text-red-500 transition uppercase tracking-widest font-bold">
+                TELEGRAM
+            </a>
+            <div class="flex gap-2">
+                <button onclick="switchTab('tv')" id="tv-tab" class="px-5 py-2 bg-red-600 rounded-full text-xs font-bold transition shadow-[0_0_15px_rgba(220,38,38,0.5)]">LIVE TV</button>
+                <button onclick="switchTab('movies')" id="movie-tab" class="px-5 py-2 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition">MOVIES</button>
+            </div>
         </div>
     </header>
 
@@ -52,14 +58,6 @@
             <div id="movie-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
         </div>
     </main>
-
-    <footer class="max-w-6xl mx-auto p-6 mt-10">
-        <div class="flex justify-center items-center">
-            <a href="https://t.me/Mr_Ooliver" target="_blank" class="text-[10px] text-gray-500 hover:text-red-500 transition font-bold uppercase tracking-widest">
-                TELEGRAM
-            </a>
-        </div>
-    </footer>
 
     <script>
         let allChannels = [];
