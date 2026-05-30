@@ -60,7 +60,6 @@
         <div class="glass p-6 rounded-2xl text-xs text-gray-400">
             <p class="mb-4">Free IPTV Project does not host, stream, or store any of the video content or channels available on this website. All streaming links are aggregated from publicly accessible, third-party websites on the internet. We only provide an interface to embed these external links for informational purposes. All content, trademarks, and copyrights belong strictly to their respective owners.</p>
             <div class="pt-4 border-t border-white/5 flex gap-4 font-bold">
-                <span>© Copyright Disclaimer</span>
                 <a href="https://t.me/Mr_Ooliver" target="_blank" class="text-blue-500 hover:underline">TELEGRAM</a>
             </div>
         </div>
@@ -76,11 +75,8 @@
             } catch (e) { console.error("Error:", e); }
         }
         function switchTab(tab) {
-            // সেকশন পরিবর্তন
             document.getElementById('tv-section').classList.toggle('hidden', tab !== 'tv');
             document.getElementById('movie-section').classList.toggle('hidden', tab !== 'movies');
-            
-            // বাটনের স্টাইল পরিবর্তন
             document.getElementById('tv-tab').className = tab === 'tv' ? 'px-4 py-1.5 bg-red-600 rounded-full text-xs font-bold transition' : 'px-4 py-1.5 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition';
             document.getElementById('movie-tab').className = tab === 'movies' ? 'px-4 py-1.5 bg-red-600 rounded-full text-xs font-bold transition' : 'px-4 py-1.5 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition';
         }
