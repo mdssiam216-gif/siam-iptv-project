@@ -21,9 +21,17 @@
     <!-- Header -->
     <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-white/10">
         <h1 class="text-2xl font-bold tracking-tighter text-white">SIAM<span class="gradient-text">PREMIUM</span></h1>
-        <div class="flex gap-4">
-            <button onclick="switchTab('tv')" id="tv-tab" class="px-4 py-1.5 bg-red-600 rounded-full text-xs font-bold transition">LIVE TV</button>
-            <button onclick="switchTab('movies')" id="movie-tab" class="px-4 py-1.5 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition">THEATER</button>
+        
+        <div class="flex items-center gap-4">
+            <!-- Telegram Link -->
+            <a href="https://t.me/Mr_Ooliver" target="_blank" class="hidden md:flex items-center gap-2 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 rounded-full text-[10px] font-bold transition shadow-lg shadow-blue-900/20">
+                <span class="text-[10px] text-white">TELEGRAM: @Mr_Ooliver</span>
+            </a>
+            
+            <div class="flex gap-2">
+                <button onclick="switchTab('tv')" id="tv-tab" class="px-4 py-1.5 bg-red-600 rounded-full text-xs font-bold transition">LIVE TV</button>
+                <button onclick="switchTab('movies')" id="movie-tab" class="px-4 py-1.5 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition">THEATER</button>
+            </div>
         </div>
     </header>
 
@@ -62,6 +70,58 @@
         
         async function fetchData() {
             const res = await fetch('channels.json');
+            allChannels = await res.json();
+            renderUI();
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tv-section').classList.toggle('hidden', tab !== 'tv');
+            document.getElementById('movie-section').classList.toggle('hidden', tab !== 'movies');
+            document.getElementById('tv-tab').className = tab === 'tv' ? 'px-4 py-1.5 bg-red-600 rounded-full text-xs font-bold' : 'px-4 py-1.5 bg-white/5 rounded-full text-xs font-bold';
+            document.getElementById('movie-tab').className = tab === 'movies' ? 'px-4 py-1.5 bg-red-600 rounded-full text-xs font-bold' : 'px-4 py-1.5 bg-white/5 rounded-full text-xs font-bold';
+        }
+
+        function renderUI() {
+            const list = document.getElementById('channel-list');
+            const grid = document.getElementById('movie-grid');
+            
+            list.innerHTML = allChannels.filter(c => c.category !== 'Movies').map(c => `
+                <div onclick="playTv('${c.url}', '${c.name}')" class="p-3 bg-white/5 hover:bg-red-600/20 rounded-lg cursor-pointer flex items-center gap-3 transition">
+                    <img src="${c.logo}" class="w-8 h-8 rounded">
+                    <span class="text-sm font-medium">${c.name}</span>
+                </div>
+            `).join('');
+
+            grid.innerHTML = allChannels.filter(c => c.category === 'Movies').map(m => `
+                <div onclick="playMovie('${m.url}', '${m.name}')" class="movie-card bg-white/5 rounded-xl overflow-hidden cursor-pointer border border-white/5 transition">
+                    <img src="${m.logo}" class="w-full aspect-[2/3] object-cover">
+                    <div class="p-3"><p class="text-xs font-bold truncate">${m.name}</p></div>
+                </div>
+            `).join('');
+        }
+
+        function playTv(url, name) {
+            document.getElementById('now-playing').innerText = "Playing: " + name;
+            const video = document.getElementById('iptv-player');
+            if(Hls.isSupported()){
+                const hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+            }
+            video.play();
+        }
+
+        function playMovie(url, name) {
+            document.getElementById('movie-player-box').classList.remove('hidden');
+            const video = document.getElementById('movie-player');
+            video.src = url;
+            video.play();
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>            const res = await fetch('channels.json');
             allChannels = await res.json();
             renderUI();
         }
