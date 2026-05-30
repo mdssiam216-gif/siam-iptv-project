@@ -42,10 +42,9 @@
                     <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
                         <video id="iptv-player" class="w-full h-full" controls autoplay></video>
                     </div>
-                    <h2 id="now-playing" class="mt-4 text-lg font-semibold text-white/80">Select a channel to start</h2>
+                    <h2 id="now-playing" class="mt-4 text-lg font-semibold text-white/80">Loading...</h2>
                 </div>
                 <div class="bg-white/5 p-4 rounded-3xl h-[500px] overflow-y-auto border border-white/5">
-                    <input type="text" id="search" oninput="searchChannels()" placeholder="Search channels..." class="w-full bg-black/50 p-3 rounded-xl border border-white/10 mb-4 text-sm focus:outline-none focus:border-red-500 text-white">
                     <div id="channel-list" class="space-y-2"></div>
                 </div>
             </div>
@@ -69,8 +68,6 @@
                 const res = await fetch('channels.json');
                 allChannels = await res.json();
                 renderUI();
-                
-                // প্রথম চ্যানেলটি অটোমেটিক প্লে করার জন্য
                 if (allChannels.length > 0) {
                     const firstChannel = allChannels.find(c => c.category !== 'Movies');
                     if (firstChannel) playTv(firstChannel.url, firstChannel.name);
@@ -88,7 +85,7 @@
             const grid = document.getElementById('movie-grid');
             list.innerHTML = allChannels.filter(c => c.category !== 'Movies').map(c => `
                 <div onclick="playTv('${c.url}', '${c.name}')" class="p-3 bg-white/5 hover:bg-red-600/20 rounded-xl cursor-pointer flex items-center gap-3 transition border border-white/5">
-                    <img src="${c.logo}" class="w-8 h-8 rounded-lg" onerror="this.style.display='none'">
+                    <img src="${c.logo}" class="w-8 h-8 rounded-lg object-cover" onerror="this.style.display='none'">
                     <span class="text-sm font-medium">${c.name}</span>
                 </div>
             `).join('');
@@ -103,12 +100,14 @@
             document.getElementById('now-playing').innerText = "Playing: " + name;
             const video = document.getElementById('iptv-player');
             if(Hls.isSupported()){ const hls = new Hls(); hls.loadSource(url); hls.attachMedia(video); hls.play(); }
+            else { video.src = url; video.play(); }
         }
         function playMovie(url, name) {
             document.getElementById('movie-player-box').classList.remove('hidden');
             const video = document.getElementById('movie-player');
             video.src = url;
             video.play();
+            window.scrollTo(0, 0);
         }
         fetchData();
     </script>
