@@ -1,10 +1,10 @@
 [
   {
     "id": 1,
-    "name": "ATN news",
-    "category": "News",
-    "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/1/18/ATN_News_Logo_without_slogan.svg/250px-ATN_News_Logo_without_slogan.svg.png",
-    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/1706-audio_113362_eng=113200-video=442000.m3u8"
+    "name": "sony liv",
+    "category": "Sports",
+    "logo": "https://th.bing.com/th/id/OSK.ydk-X6QOMcWkwzfC6_EzY-J_nGnX_YyolDbOL6wyZHQ?w=50&h=50&c=12&o=6&pid=SANGAM",
+    "url": "https://zubayerop.short.gy/PSG-V-ARS-ENG.m3u8"
   },
   {
     "id": 2,
@@ -173,12 +173,5 @@
     "category": "Movies",
     "logo": "https://i.imgbd.org/poster_199j1779281825.jpg",
     "url": "https://play.movielinkbd.mom/watch/SNhSFSUOV9FQP66U.5Z7TyFdC0-t6n-dvCrPCmrl30zw-KrQ7URTTYmuoK3OjHo-edH14vqcHEkRgP2KY2BNiwIwGm0CB.LFjsl8kq0-Q5m_CWAR0oPw"
-    },
-  {
-    "id": 26,
-    "name": "sony liv",
-    "category": "Sports",
-    "logo": "https://th.bing.com/th/id/OSK.ydk-X6QOMcWkwzfC6_EzY-J_nGnX_YyolDbOL6wyZHQ?w=50&h=50&c=12&o=6&pid=SANGAM",
-    "url": "https://zubayerop.short.gy/PSG-V-ARS-ENG.m3u8"
   }
 ]
