@@ -18,6 +18,7 @@
 </head>
 <body class="antialiased">
 
+    <!-- Header -->
     <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-white/10">
         <h1 class="text-2xl font-bold tracking-tighter text-white">SIAM<span class="gradient-text">PREMIUM</span></h1>
         <div class="flex gap-2">
@@ -27,6 +28,7 @@
     </header>
 
     <main class="max-w-6xl mx-auto p-4 mt-4">
+        <!-- TV Section -->
         <div id="tv-section">
             <div class="grid lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2">
@@ -42,6 +44,7 @@
             </div>
         </div>
 
+        <!-- Movie Section -->
         <div id="movie-section" class="hidden">
             <div id="movie-player-box" class="hidden mb-8">
                 <div class="aspect-video bg-black rounded-2xl overflow-hidden border border-white/10">
@@ -52,6 +55,7 @@
         </div>
     </main>
 
+    <!-- Footer -->
     <footer class="max-w-6xl mx-auto p-6 mt-10 border-t border-white/10">
         <div class="glass p-6 rounded-2xl text-xs text-gray-400">
             <p class="mb-4">Free IPTV Project does not host, stream, or store any of the video content or channels available on this website. All streaming links are aggregated from publicly accessible, third-party websites on the internet. We only provide an interface to embed these external links for informational purposes. All content, trademarks, and copyrights belong strictly to their respective owners.</p>
@@ -72,13 +76,42 @@
             } catch (e) { console.error("Error:", e); }
         }
         function switchTab(tab) {
+            // সেকশন পরিবর্তন
             document.getElementById('tv-section').classList.toggle('hidden', tab !== 'tv');
             document.getElementById('movie-section').classList.toggle('hidden', tab !== 'movies');
-            document.getElementById('tv-tab').className = tab === 'tv' ? 'px-4 py-1.5 bg-red-600 rounded-full text-xs font-bold' : 'px-4 py-1.5 bg-white/5 rounded-full text-xs font-bold';
-            document.getElementById('movie-tab').className = tab === 'movies' ? 'px-4 py-1.5 bg-red-600 rounded-full text-xs font-bold' : 'px-4 py-1.5 bg-white/5 rounded-full text-xs font-bold';
+            
+            // বাটনের স্টাইল পরিবর্তন
+            document.getElementById('tv-tab').className = tab === 'tv' ? 'px-4 py-1.5 bg-red-600 rounded-full text-xs font-bold transition' : 'px-4 py-1.5 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition';
+            document.getElementById('movie-tab').className = tab === 'movies' ? 'px-4 py-1.5 bg-red-600 rounded-full text-xs font-bold transition' : 'px-4 py-1.5 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition';
         }
         function renderUI() {
             const list = document.getElementById('channel-list');
             const grid = document.getElementById('movie-grid');
             list.innerHTML = allChannels.filter(c => c.category !== 'Movies').map(c => `
-                <div onclick="playTv('${c.url}', '${c.name}')" class="p-3 bg-white/5 hover:bg-red-600/20 rounded-lg cursor-pointer flex items-center
+                <div onclick="playTv('${c.url}', '${c.name}')" class="p-3 bg-white/5 hover:bg-red-600/20 rounded-lg cursor-pointer flex items-center gap-3 transition">
+                    <img src="${c.logo}" class="w-8 h-8 rounded" onerror="this.style.display='none'">
+                    <span class="text-sm font-medium">${c.name}</span>
+                </div>
+            `).join('');
+            grid.innerHTML = allChannels.filter(c => c.category === 'Movies').map(m => `
+                <div onclick="playMovie('${m.url}', '${m.name}')" class="movie-card bg-white/5 rounded-xl overflow-hidden cursor-pointer border border-white/5 transition">
+                    <img src="${m.logo}" class="w-full aspect-[2/3] object-cover">
+                    <div class="p-3"><p class="text-xs font-bold truncate">${m.name}</p></div>
+                </div>
+            `).join('');
+        }
+        function playTv(url, name) {
+            document.getElementById('now-playing').innerText = "Playing: " + name;
+            const video = document.getElementById('iptv-player');
+            if(Hls.isSupported()){ const hls = new Hls(); hls.loadSource(url); hls.attachMedia(video); hls.play(); }
+        }
+        function playMovie(url, name) {
+            document.getElementById('movie-player-box').classList.remove('hidden');
+            const video = document.getElementById('movie-player');
+            video.src = url;
+            video.play();
+        }
+        fetchData();
+    </script>
+</body>
+</html>
