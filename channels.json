@@ -4,14 +4,13 @@
 
     "id": 1,
 
-    "name": "fifa +",
+    "name": "Fox sports 2",
 
     "category": "Sports",
 
-    "logo": "https://th.bing.com/th?q=FIFA+Official+Logo&w=120&h=120&c=1&rs=1&qlt=70&r=0&o=7&cb=1&pid=InlineBlock&rm=3&mkt=en-WW&cc=BD&setlang=en&adlt=moderate&t=1&mw=247",
+    "logo": "https://tse4.mm.bing.net/th/id/OIP.ryWH-4jZxM855eHjMPbnBgHaFA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
 
-    "url": "https://37b4c228.wurl.com/manifest/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWZyX0ZJRkFQbHVzRnJlbmNoX0hMUw/6f5437c5-e015-4754-8476-c8c6d27d3a55/1.m3u8"
-
+    "url": "https://tvsen7.aynaott.com/foxsports2/tracks-v1a1/mono.ts.m3u8"
   },
 
   {
@@ -130,14 +129,13 @@
 
     "id": 10,
 
-    "name": "Fox sports 2",
+    "name": "fifa +",
 
     "category": "Sports",
 
-    "logo": "https://tse4.mm.bing.net/th/id/OIP.ryWH-4jZxM855eHjMPbnBgHaFA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    "logo": "https://th.bing.com/th?q=FIFA+Official+Logo&w=120&h=120&c=1&rs=1&qlt=70&r=0&o=7&cb=1&pid=InlineBlock&rm=3&mkt=en-WW&cc=BD&setlang=en&adlt=moderate&t=1&mw=247",
 
-    "url": "https://tvsen7.aynaott.com/foxsports2/tracks-v1a1/mono.ts.m3u8"
-
+    "url": "https://37b4c228.wurl.com/manifest/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWZyX0ZJRkFQbHVzRnJlbmNoX0hMUw/6f5437c5-e015-4754-8476-c8c6d27d3a55/1.m3u8"
   },
 
   {
