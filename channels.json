@@ -1,10 +1,10 @@
-[
+},
   {
     "id": 1,
-    "name": "SONYLIV",
+    "name": "Star Sports 1",
     "category": "Sports",
-    "logo": "https://th.bing.com/th/id/OSK.ydk-X6QOMcWkwzfC6_EzY-J_nGnX_YyolDbOL6wyZHQ?w=50&h=50&c=12&o=6&pid=SANGAM",
-    "url": "https://zubayerop.short.gy/PSG-V-ARS-ENG.m3u8"
+    "logo": "https://i.pinimg.com/736x/55/bc/a6/55bca6bbbd01df17b64a10376c172878.jpg",
+    "url": "https://tvsen7.aynaott.com/sspts1/tracks-v1a1/mono.ts.m3u8"
   },
   {
     "id": 2,
@@ -19,13 +19,13 @@
     "category": "Entertainment",
     "logo": "https://i.postimg.cc/L6WP5g60/Deepto-TV.jpg",
     "url": "https://byphdgllyk.gpcdn.net/hls/deeptotv/index.m3u8"
-  },
+  [
   {
     "id": 4,
-    "name": "Star Sports 1",
+    "name": "SONYLIV",
     "category": "Sports",
-    "logo": "https://i.pinimg.com/736x/55/bc/a6/55bca6bbbd01df17b64a10376c172878.jpg",
-    "url": "https://tvsen7.aynaott.com/sspts1/tracks-v1a1/mono.ts.m3u8"
+    "logo": "https://th.bing.com/th/id/OSK.ydk-X6QOMcWkwzfC6_EzY-J_nGnX_YyolDbOL6wyZHQ?w=50&h=50&c=12&o=6&pid=SANGAM",
+    "url": "https://zubayerop.short.gy/PSG-V-ARS-ENG.m3u8"
   },
   {
     "id": 5,
