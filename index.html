@@ -3,92 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIAM PREMIUM | LIVE TV</title>
+    <title>SIAM PREMIUM</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        body { background: #0c0c0c; color: white; font-family: sans-serif; }
-        .channel-card { background: #1a1a1a; border: 1px solid #333; transition: 0.3s; padding: 15px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; }
-        .channel-card:hover { border-color: #ef4444; transform: translateY(-5px); cursor: pointer; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; }
+        body { background: #0a0a0a; color: white; }
+        .section-title { color: #ef4444; font-weight: bold; margin-bottom: 1rem; border-left: 4px solid #ef4444; padding-left: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-6">
 
-    <h1 class="text-3xl font-bold text-center mb-8 text-white uppercase tracking-widest border-b border-white/10 pb-4">SIAM <span class="text-red-500">PREMIUM</span></h1>
-
-    <!-- চ্যানেল গ্রিড -->
-    <div id="channel-grid" class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-4 max-w-6xl mx-auto"></div>
-
-    <!-- ভিডিও পপআপ (Modal) -->
-    <div id="video-modal" class="modal">
-        <div class="max-w-4xl w-full p-4 relative">
-            <button onclick="closeModal()" class="text-white text-3xl mb-2">&times; Close</button>
-            <div class="aspect-video bg-black rounded-xl overflow-hidden">
-                <video id="player" class="w-full h-full" controls autoplay></video>
-            </div>
-            <h2 id="video-title" class="mt-4 text-xl font-bold"></h2>
-        </div>
+    <!-- টেলিগ্রাম লিঙ্ক -->
+    <div class="text-center mb-8">
+        <a href="https://t.me/your_username" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full font-bold transition">JOIN TELEGRAM</a>
     </div>
 
+    <h1 class="text-3xl font-bold text-center mb-10">SIAM <span class="text-red-500">PREMIUM</span></h1>
+
+    <!-- লাইভ টিভি সেকশন -->
+    <h2 class="section-title">LIVE TV</h2>
+    <div id="tv-grid" class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-4 mb-10"></div>
+
+    <!-- মুভি সেকশন -->
+    <h2 class="section-title">MOVIES</h2>
+    <div id="movie-grid" class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-4"></div>
+
     <script>
-        const data = [
-            {"id": 1, "name": "SONYLIV", "category": "Sports", "logo": "https://th.bing.com/th/id/OSK.ydk-X6QOMcWkwzfC6_EzY-J_nGnX_YyolDbOL6wyZHQ?w=50&h=50&c=12&o=6&pid=SANGAM", "url": "https://zubayerop.short.gy/PSG-V-ARS-ENG.m3u8"},
-            {"id": 2, "name": "DD Sports", "category": "Sports", "logo": "https://i.postimg.cc/7hVCMDyZ/dd-sports.jpg", "url": "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/b17adfe543354fdd8d189b110617cddd/index_3.m3u8"},
-            {"id": 3, "name": "Deepto TV", "category": "Entertainment", "logo": "https://i.postimg.cc/L6WP5g60/Deepto-TV.jpg", "url": "https://byphdgllyk.gpcdn.net/hls/deeptotv/index.m3u8"},
-            {"id": 4, "name": "Star Sports 1", "category": "Sports", "logo": "https://i.pinimg.com/736x/55/bc/a6/55bca6bbbd01df17b64a10376c172878.jpg", "url": "https://tvsen7.aynaott.com/sspts1/tracks-v1a1/mono.ts.m3u8"},
-            {"id": 5, "name": "sony max", "category": "Entertainment", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/SONY_MAX_Logo_2022.png/960px-SONY_MAX_Logo_2022.png", "url": "https://edge2.roarzone.net:8447/roarzone/edge3/sony_max/tracks-v1a1/mono.m3u8"},
-            {"id": 6, "name": "Sambhavam", "category": "Movies", "logo": "https://ftpbd.net/wp-content/uploads/2026/04/tBNSo4T0R8UztkkpjYkzXI4bFAT-288x400.jpg", "url": "https://www.ftpbd.net/wp-content/hls-file/Sambhavam-Adhyayam-Onnu-2026-Hindi-Dubbed-1080p-WEBDL_reencoded/index.m3u8"},
-            {"id": 7, "name": "T Sports", "category": "Sports", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/T_Sports_logo.svg/250px-T_Sports_logo.svg.png", "url": "https://tvsen7.aynaott.com/tsports-hd/tracks-v1a1/mono.ts.m3u8"},
-            {"id": 8, "name": "PTV Sports", "category": "Sports", "logo": "https://image.winudf.com/v2/image1/ZGV2X2ltYWdlXzI3MzM1OTk2XzIwNjc0NV8yMDIzMTAyMzA5NTQ0NDQ4MQ/icon.png?w=280&fakeurl=1", "url": "https://tvsen5.aynaott.com/PtvSports/tracks-v1a1/mono.ts.m3u8"},
-            {"id": 9, "name": "willow hd", "category": "Sports", "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Willow_Cricket.PNG/250px-Willow_Cricket.PNG", "url": "https://tvsen5.aynaott.com/willowhd/tracks-v1a1/mono.ts.m3u8"},
-            {"id": 10, "name": "Fox sports 2", "category": "Sports", "logo": "https://tse4.mm.bing.net/th/id/OIP.ryWH-4jZxM855eHjMPbnBgHaFA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "url": "https://tvsen7.aynaott.com/foxsports2/tracks-v1a1/mono.ts.m3u8"},
-            {"id": 11, "name": "ESPN", "category": "Sports", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/ESPN_wordmark.svg/250px-ESPN_wordmark.svg.png", "url": "https://tvsen5.aynaott.com/espn/tracks-v1a1/mono.ts.m3u8"},
-            {"id": 12, "name": "A sports", "category": "Sports", "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/A_Sports_Logo.png/250px-A_Sports_Logo.png", "url": "https://tvsen6.aynaott.com/asports/tracks-v1a1/mono.ts.m3u8"},
-            {"id": 13, "name": "sony sports 1", "category": "Sports", "logo": "https://carotvnepal.com.np/wp-content/uploads/2024/04/SONY-TEN-SPORTS-1-HD.png", "url": "https://edge2.roarzone.net:8447/roarzone/edge3/sony_sports_1_hd/tracks-v1a1/mono.m3u8"},
-            {"id": 14, "name": "sony sports 2", "category": "Sports", "logo": "https://assets.airtel.in/static-assets/cms/dth/images/logo-adapt-pages/SONY%20SPORTS%20TEN%202.jpg", "url": "https://edge2.roarzone.net:8447/roarzone/edge3/sony_sports_2_hd/tracks-v1a1/mono.m3u8"},
-            {"id": 15, "name": "sony sports 5", "category": "Sports", "logo": "https://www.sonypicturesnetworks.com/images/logos/SONY_SportsTen5_SD_Logo_CLR.png", "url": "https://edge2.roarzone.net:8447/roarzone/edge3/sony_sports_5_hd/tracks-v1a1/mono.m3u8"},
-            {"id": 16, "name": "ten cricket", "category": "Sports", "logo": "https://tse1.mm.bing.net/th/id/OIP._8gSEt6bXg3fuRX5R3MmpwAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "url": "https://edge2.roarzone.net:8447/roarzone/edge3/ten_cricket/tracks-v1a1/mono.m3u8"},
-            {"id": 17, "name": "TSN 1", "category": "Sports", "logo": "https://th.bing.com/th/id/R.0758aa23cae84629c44e08102d13193d?rik=aRaKy0pilbPdhA&riu=http%3a%2f%2fwww.nrtco.net%2fsites%2fdefault%2ffiles%2fimg%2ftsn1.png&ehk=YebU5DYgUfFK2z%2boI2%2fiyH8gZvLHSgDvzqCXOomG3EM%3d&risl=&pid=ImgRaw&r=0", "url": "https://tvsen7.aynaott.com/tsn1/tracks-v1a1/mono.ts.m3u8"},
-            {"id": 18, "name": "TSN 2", "category": "Sports", "logo": "https://tse2.mm.bing.net/th/id/OIP.krfdH6WbaT6LqNG55axnFwAAAA?r=0&w=250&h=250&rs=1&pid=ImgDetMain&o=7&rm=3", "url": "https://tvsen7.aynaott.com/tsn2/tracks-v1a1/mono.ts.m3u8"},
-            {"id": 19, "name": "TSN 3", "category": "Sports", "logo": "https://th.bing.com/th/id/R.deb06b18a2f6a058ef8fa41b642430cd?rik=1pPQwAJilwEn0w&riu=http%3a%2f%2fwww.nrtccommunications.net%2fsites%2fdefault%2ffiles%2fimg%2ftsn3.png&ehk=p2xWWrvBAjRzDGnxf1lenB%2fidaHxRn2LcVd0FIlxDcw%3d&risl=&pid=ImgRaw&r=0", "url": "https://tvsen7.aynaott.com/tsn3/tracks-v1a1/mono.ts.m3u8"},
-            {"id": 20, "name": "golf channel", "category": "Sports", "logo": "https://tse4.mm.bing.net/th/id/OIP.if7Z7MngkWlMcEleGSeX7QHaCO?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "url": "https://tvsen6.aynaott.com/golfchannel/tracks-v1a1/mono.ts.m3u8"},
-            {"id": 21, "name": "euro sports hd", "category": "Sports", "logo": "https://tse3.mm.bing.net/th/id/OIP.f54O7lyRXC_0b3nrWKXqaQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "url": "https://stream.ottplus.bd/live/euro_sports_hd_abr/live/euro_sports_hd/chunks.m3u8"},
-            {"id": 22, "name": "beinsports xtra", "category": "Sports", "logo": "https://th.bing.com/th/id/OIP.1-7a9uTgwIvzKBmmGDsYTAHaEH?w=282&h=180&c=7&r=0&o=7&pid=1.7&rm=3", "url": "https://bein-esp-xumo.amagi.tv/playlistR720P.m3u8"},
-            {"id": 23, "name": "Rakkhosh", "category": "Movies", "logo": "https://i.imgbd.org/poster_im9v1779295428.jpg", "url": "https://play.movielinkbd.mom/watch/ApJwPnWnEAyO_XrG.v_wYsqUm4Qzkh4dPc-qFftWgdxsvG5euBZMX9EFXy5XZo1ydNQC9nDywClncfrGB4Viq0mOSUUvH.PKaDfPycsZWC1nL8J2iURw"},
-            {"id": 24, "name": "Prince", "category": "Movies", "logo": "https://image.tmdb.org/t/p/original/1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg", "url": "https://play.movielinkbd.mom/watch/YcsJNBt8q7FtLLoO.SyqA0wS_8FMtM2kQ7bHpG6JhOsOBfU8La3509gSsjCbI2TBhT3nmqOMX8kpVkUTpRkXnVkPS5vWH.hXFxqCF3C9j_1iUbZgBRYQ"},
-            {"id": 25, "name": "Domm", "category": "Movies", "logo": "https://i.imgbd.org/poster_199j1779281825.jpg", "url": "https://play.movielinkbd.mom/watch/SNhSFSUOV9FQP66U.5Z7TyFdC0-t6n-dvCrPCmrl30zw-KrQ7URTTYmuoK3OjHo-edH14vqcHEkRgP2KY2BNiwIwGm0CB.LFjsl8kq0-Q5m_CWAR0oPw"}
-        ];
+        const data = [/* তোমার JSON ডেটা এখানে বসাও */];
 
-        let hls = null;
+        function render() {
+            const tvGrid = document.getElementById('tv-grid');
+            const movieGrid = document.getElementById('movie-grid');
 
-        function renderGrid() {
-            const grid = document.getElementById('channel-grid');
-            grid.innerHTML = data.map(c => `
-                <div class="channel-card" onclick="openModal('${c.url}', '${c.name}')">
-                    <img src="${c.logo}" class="w-16 h-16 object-contain mb-2">
-                    <span class="text-[10px] font-bold text-center uppercase">${c.name}</span>
-                </div>
-            `).join('');
+            data.forEach(item => {
+                const card = `
+                    <div class="bg-[#1a1a1a] p-3 rounded-lg hover:border border-red-500 cursor-pointer transition">
+                        <img src="${item.logo}" class="w-full aspect-square object-cover rounded mb-2">
+                        <p class="text-[10px] text-center font-bold uppercase truncate">${item.name}</p>
+                    </div>
+                `;
+                
+                if (item.category === 'Movies') {
+                    movieGrid.innerHTML += card;
+                } else {
+                    tvGrid.innerHTML += card;
+                }
+            });
         }
-
-        function openModal(url, name) {
-            document.getElementById('video-modal').style.display = 'flex';
-            document.getElementById('video-title').innerText = name;
-            const video = document.getElementById('player');
-            if (hls) hls.destroy();
-            hls = new Hls();
-            hls.loadSource(url);
-            hls.attachMedia(video);
-            video.play();
-        }
-
-        function closeModal() {
-            document.getElementById('video-modal').style.display = 'none';
-            document.getElementById('player').pause();
-        }
-
-        renderGrid();
+        render();
     </script>
 </body>
 </html>
