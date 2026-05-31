@@ -8,23 +8,14 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
-        
-        /* Default (Dark Mode) */
         body { font-family: 'Inter', sans-serif; background: #050505; color: white; transition: 0.3s; }
-        .glass { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        
-        /* Light Mode Classes */
         body.light-mode { background: #f3f4f6; color: #1f2937; }
-        body.light-mode .glass { background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0, 0, 0, 0.1); }
-        body.light-mode .bg-white\/5 { background: rgba(0, 0, 0, 0.05); border-color: rgba(0, 0, 0, 0.1); }
-        body.light-mode .text-white { color: #1f2937; }
-        body.light-mode .text-white\/60 { color: #4b5563; }
-        body.light-mode .text-white\/80 { color: #374151; }
-
+        .glass { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        body.light-mode .glass { background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0,0,0,0.1); }
         .gradient-text { background: linear-gradient(90deg, #ef4444, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .telegram-glow { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
         .movie-card { transition: all 0.3s ease; }
-        .movie-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2); }
+        .movie-card:hover { transform: translateY(-8px); }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #ef4444; border-radius: 10px; }
     </style>
@@ -34,20 +25,20 @@
     <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-white/10">
         <h1 class="text-2xl font-black tracking-tighter">SIAM<span class="gradient-text">PREMIUM</span></h1>
         <div class="flex gap-2">
-            <button onclick="toggleTheme()" class="px-3 py-2 bg-white/10 rounded-full text-xs font-bold transition hover:scale-105">☀️/🌙</button>
-            <button onclick="switchTab('tv')" id="tv-tab" class="px-5 py-2 bg-red-600 rounded-full text-xs font-bold transition">LIVE TV</button>
-            <button onclick="switchTab('movies')" id="movie-tab" class="px-5 py-2 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition">MOVIES</button>
+            <button onclick="toggleTheme()" class="px-3 py-2 bg-white/10 rounded-full text-xs font-bold">☀️/🌙</button>
+            <button onclick="switchTab('tv')" id="tv-tab" class="px-5 py-2 bg-red-600 rounded-full text-xs font-bold">LIVE TV</button>
+            <button onclick="switchTab('movies')" id="movie-tab" class="px-5 py-2 bg-white/5 rounded-full text-xs font-bold">MOVIES</button>
         </div>
     </header>
 
     <div class="max-w-6xl mx-auto px-4 mt-8">
-        <div class="bg-white/5 backdrop-blur-2xl border border-white/10 p-6 rounded-3xl shadow-2xl">
-            <h2 class="text-2xl font-black text-white tracking-tight">IPL GRAND FINALE</h2>
-            <p class="text-white/60 text-sm font-medium mb-4">আজকের মহারণ শুরু হতে আর বাকি:</p>
+        <div class="glass p-6 rounded-3xl border border-white/10">
+            <h2 class="text-2xl font-black">IPL GRAND FINALE</h2>
+            <p class="text-sm opacity-60 mb-4">আজকের মহারণ শুরু হতে আর বাকি:</p>
             <div id="timer" class="flex gap-4 font-black text-2xl">
-                <div class="text-center"><span id="hours">00</span><br><span class="text-[10px]">ঘণ্টা</span></div>
-                <div class="text-center"><span id="minutes">00</span><br><span class="text-[10px]">মিনিট</span></div>
-                <div class="text-center"><span id="seconds">00</span><br><span class="text-[10px]">সেকেন্ড</span></div>
+                <div><span id="hours">00</span><br><span class="text-[10px]">ঘণ্টা</span></div>
+                <div><span id="minutes">00</span><br><span class="text-[10px]">মিনিট</span></div>
+                <div><span id="seconds">00</span><br><span class="text-[10px]">সেকেন্ড</span></div>
             </div>
         </div>
     </div>
@@ -57,11 +48,13 @@
             <div class="grid lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2">
                     <a href="https://t.me/Mr_Ooliver" target="_blank" class="telegram-glow text-[10px] font-extrabold block mb-2 text-right">JOIN TELEGRAM</a>
-                    <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                    <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10">
                         <video id="iptv-player" class="w-full h-full" controls autoplay></video>
                     </div>
+                    <h2 id="now-playing" class="mt-4 text-lg font-semibold">Loading...</h2>
                 </div>
-                <div class="bg-white/5 p-4 rounded-3xl h-[500px] overflow-y-auto border border-white/5">
+                <div class="glass p-4 rounded-3xl h-[500px] overflow-y-auto border border-white/5">
+                    <div id="category-tabs" class="flex gap-2 mb-4 overflow-x-auto pb-2"></div>
                     <div id="channel-list" class="space-y-2"></div>
                 </div>
             </div>
@@ -69,7 +62,7 @@
 
         <div id="movie-section" class="hidden">
             <div id="movie-player-box" class="hidden mb-8">
-                <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10">
                     <video id="movie-player" class="w-full h-full" controls></video>
                 </div>
             </div>
@@ -78,16 +71,53 @@
     </main>
 
     <script>
-        // মোড টগল
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        let allChannels = [], hls = null;
+        async function fetchData() {
+            try {
+                const res = await fetch('channels.json');
+                allChannels = await res.json();
+                renderCategories(); filterChannels('All'); renderMovies();
+                const first = allChannels.find(c => c.category !== 'Movies');
+                if(first) playTv(first.url, first.name);
+            } catch(e) { console.error(e); }
         }
 
-        if(localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        
+        function switchTab(tab) {
+            document.getElementById('tv-section').classList.toggle('hidden', tab !== 'tv');
+            document.getElementById('movie-section').classList.toggle('hidden', tab !== 'movies');
+            document.getElementById('tv-tab').classList.toggle('bg-red-600', tab === 'tv');
+            document.getElementById('movie-tab').classList.toggle('bg-red-600', tab === 'movies');
+        }
 
-        // টাইমার ও অন্যান্য ফাংশন আগের মতোই কাজ করবে...
-        // (বাকি জাভাস্ক্রিপ্ট কোডগুলো এখানে বসিয়ে নিন)
+        function renderCategories() {
+            const cats = ['All', ...new Set(allChannels.filter(c => c.category !== 'Movies').map(c => c.category))];
+            document.getElementById('category-tabs').innerHTML = cats.map(cat => `<button onclick="filterChannels('${cat}')" class="px-3 py-1 bg-white/10 rounded-lg text-[10px] uppercase font-bold hover:bg-red-600">${cat}</button>`).join('');
+        }
+
+        function filterChannels(cat) {
+            const filtered = cat === 'All' ? allChannels.filter(c => c.category !== 'Movies') : allChannels.filter(c => c.category === cat);
+            document.getElementById('channel-list').innerHTML = filtered.map(c => `<div onclick="playTv('${c.url}', '${c.name}')" class="p-3 bg-white/5 hover:bg-red-600/20 rounded-xl cursor-pointer flex items-center gap-3"><img src="${c.logo}" class="w-8 h-8 rounded-lg object-cover"><span class="text-sm">${c.name}</span></div>`).join('');
+        }
+
+        function renderMovies() {
+            document.getElementById('movie-grid').innerHTML = allChannels.filter(c => c.category === 'Movies').map(m => `<div onclick="playMovie('${m.url}', '${m.name}')" class="movie-card bg-white/5 rounded-2xl p-2 cursor-pointer"><img src="${m.logo}" class="w-full aspect-[2/3] object-cover rounded-xl"><p class="text-xs font-bold mt-2 truncate">${m.name}</p></div>`).join('');
+        }
+
+        function playTv(url, name) {
+            document.getElementById('now-playing').innerText = "Playing: " + name;
+            if(hls) hls.destroy();
+            hls = new Hls(); hls.loadSource(url); hls.attachMedia(document.getElementById('iptv-player')); hls.play();
+        }
+
+        function playMovie(url, name) {
+            document.getElementById('movie-player-box').classList.remove('hidden');
+            const v = document.getElementById('movie-player');
+            v.src = url; v.play();
+        }
+
+        fetchData();
     </script>
 </body>
 </html>
