@@ -1,4 +1,4 @@
-},
+ [
   {
     "id": 1,
     "name": "Star Sports 1",
@@ -19,7 +19,7 @@
     "category": "Entertainment",
     "logo": "https://i.postimg.cc/L6WP5g60/Deepto-TV.jpg",
     "url": "https://byphdgllyk.gpcdn.net/hls/deeptotv/index.m3u8"
-  [
+ },
   {
     "id": 4,
     "name": "SONYLIV",
