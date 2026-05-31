@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; background: #050505; color: white; }
         .glass { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .gradient-text { background: linear-gradient(90deg, #ef4444, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -22,30 +22,37 @@
 
     <!-- হেডার -->
     <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-white/10">
-        <h1 class="text-2xl font-bold tracking-tighter text-white">SIAM<span class="gradient-text">PREMIUM</span></h1>
+        <h1 class="text-2xl font-black tracking-tighter text-white">SIAM<span class="gradient-text">PREMIUM</span></h1>
         <div class="flex gap-2">
             <button onclick="switchTab('tv')" id="tv-tab" class="px-5 py-2 bg-red-600 rounded-full text-xs font-bold transition">LIVE TV</button>
             <button onclick="switchTab('movies')" id="movie-tab" class="px-5 py-2 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition">MOVIES</button>
         </div>
     </header>
 
-    <!-- আইপিএল এনাউন্সমেেন্ট ও লাইভ টাইমার -->
-    <div class="max-w-6xl mx-auto px-4 mt-6">
-        <div class="bg-gradient-to-r from-red-600 to-orange-600 p-5 rounded-2xl flex flex-col md:flex-row items-center justify-between shadow-2xl border border-white/20">
-            <div class="flex items-center gap-4 mb-3 md:mb-0">
-                <span class="bg-white text-red-600 px-3 py-1 rounded-full text-[10px] font-black animate-pulse">LIVE</span>
-                <p class="text-white font-bold text-lg">IPL ফাইনাল শুরু হতে বাকি:</p>
-            </div>
-            <div id="countdown" class="flex gap-3 text-white font-mono font-bold text-xl">
-                <div class="bg-black/30 px-3 py-1 rounded-lg border border-white/20"><span id="hours">00</span><span class="text-[10px] font-normal ml-1">ঘণ্টা</span></div>
-                <div class="bg-black/30 px-3 py-1 rounded-lg border border-white/20"><span id="minutes">00</span><span class="text-[10px] font-normal ml-1">মিনিট</span></div>
-                <div class="bg-black/30 px-3 py-1 rounded-lg border border-white/20"><span id="seconds">00</span><span class="text-[10px] font-normal ml-1">সেকেন্ড</span></div>
+    <!-- প্রিমিয়াম আইপিএল ব্যানার -->
+    <div class="max-w-6xl mx-auto px-4 mt-8">
+        <div class="relative overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 p-6 rounded-3xl shadow-2xl">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-red-600 rounded-full blur-[80px] opacity-20"></div>
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-red-600 rounded-2xl shadow-lg shadow-red-600/30">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black text-white tracking-tight">IPL GRAND FINALE</h2>
+                        <p class="text-white/60 text-sm font-medium">আজকের মহারণ শুরু হতে আর বাকি:</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-center"><div id="hours" class="bg-black/40 border border-white/10 w-16 h-16 flex items-center justify-center rounded-2xl text-2xl font-black text-white">00</div><span class="text-[10px] text-white/50 uppercase font-bold mt-1 block">ঘণ্টা</span></div>
+                    <div class="text-center"><div id="minutes" class="bg-black/40 border border-white/10 w-16 h-16 flex items-center justify-center rounded-2xl text-2xl font-black text-white">00</div><span class="text-[10px] text-white/50 uppercase font-bold mt-1 block">মিনিট</span></div>
+                    <div class="text-center"><div id="seconds" class="bg-black/40 border border-white/10 w-16 h-16 flex items-center justify-center rounded-2xl text-2xl font-black text-white">00</div><span class="text-[10px] text-white/50 uppercase font-bold mt-1 block">সেকেন্ড</span></div>
+                </div>
             </div>
         </div>
     </div>
 
     <main class="max-w-6xl mx-auto p-4 mt-6">
-        <!-- TV সেকশন -->
         <div id="tv-section">
             <div class="grid lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2">
@@ -64,15 +71,10 @@
             </div>
         </div>
 
-        <!-- মুভি সেকশন -->
         <div id="movie-section" class="hidden">
-            <div class="flex justify-end mb-3 mr-4">
-                <a href="https://t.me/Mr_Ooliver" target="_blank" class="telegram-glow text-[10px] font-extrabold tracking-widest uppercase hover:scale-105 transition-transform">JOIN TELEGRAM</a>
-            </div>
+            <div class="flex justify-end mb-3 mr-4"><a href="https://t.me/Mr_Ooliver" target="_blank" class="telegram-glow text-[10px] font-extrabold tracking-widest uppercase hover:scale-105 transition-transform">JOIN TELEGRAM</a></div>
             <div id="movie-player-box" class="hidden mb-8">
-                <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                    <video id="movie-player" class="w-full h-full" controls></video>
-                </div>
+                <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl"><video id="movie-player" class="w-full h-full" controls></video></div>
             </div>
             <div id="movie-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
         </div>
@@ -82,7 +84,6 @@
         let allChannels = [];
         let hls = null;
 
-        // টাইমার লজিক
         const countDownDate = new Date("May 31, 2026 20:00:00").getTime();
         const x = setInterval(function() {
             const now = new Date().getTime();
@@ -93,7 +94,7 @@
             document.getElementById("hours").innerHTML = hours < 10 ? "0" + hours : hours;
             document.getElementById("minutes").innerHTML = minutes < 10 ? "0" + minutes : minutes;
             document.getElementById("seconds").innerHTML = seconds < 10 ? "0" + seconds : seconds;
-            if (distance < 0) { clearInterval(x); document.getElementById("countdown").innerHTML = "খেলা শুরু হয়েছে!"; }
+            if (distance < 0) { clearInterval(x); document.getElementById("hours").parentElement.parentElement.innerHTML = "খেলা শুরু হয়েছে!"; }
         }, 1000);
 
         async function fetchData() {
@@ -111,7 +112,6 @@
             const movieSection = document.getElementById('movie-section');
             const tvPlayer = document.getElementById('iptv-player');
             const moviePlayer = document.getElementById('movie-player');
-            
             if(tab === 'tv') {
                 moviePlayer.pause(); moviePlayer.src = "";
                 tvSection.classList.remove('hidden'); movieSection.classList.add('hidden');
@@ -140,9 +140,7 @@
 
         function renderCategories() {
             const cats = ['All', ...new Set(allChannels.filter(c => c.category !== 'Movies').map(c => c.category))];
-            document.getElementById('category-tabs').innerHTML = cats.map(cat => 
-                `<button onclick="filterChannels('${cat}')" class="px-3 py-1 bg-white/10 rounded-lg text-[10px] uppercase font-bold hover:bg-red-600 transition">${cat}</button>`
-            ).join('');
+            document.getElementById('category-tabs').innerHTML = cats.map(cat => `<button onclick="filterChannels('${cat}')" class="px-3 py-1 bg-white/10 rounded-lg text-[10px] uppercase font-bold hover:bg-red-600 transition">${cat}</button>`).join('');
         }
 
         function filterChannels(cat) {
