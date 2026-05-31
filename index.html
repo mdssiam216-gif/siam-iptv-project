@@ -3,143 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIAM PREMIUM | IPTV & MOVIES</title>
+    <title>SIAM PREMIUM | LIVE TV</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #050505; color: white; }
-        .glass { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .gradient-text { background: linear-gradient(90deg, #ef4444, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .telegram-glow { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
-        .movie-card { transition: all 0.3s ease; }
-        .movie-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2); }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #ef4444; border-radius: 10px; }
+        body { background: #0c0c0c; color: white; font-family: sans-serif; }
+        .channel-card { background: #1a1a1a; border: 1px solid #333; transition: 0.3s; padding: 15px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; }
+        .channel-card:hover { border-color: #ef4444; transform: translateY(-5px); cursor: pointer; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; }
     </style>
 </head>
-<body class="antialiased">
+<body class="p-4 md:p-8">
 
-    <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-white/10">
-        <h1 class="text-2xl font-bold tracking-tighter text-white">SIAM<span class="gradient-text">PREMIUM</span></h1>
-        <div class="flex gap-2">
-            <button onclick="switchTab('tv')" id="tv-tab" class="px-5 py-2 bg-red-600 rounded-full text-xs font-bold transition">LIVE TV</button>
-            <button onclick="switchTab('movies')" id="movie-tab" class="px-5 py-2 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition">MOVIES</button>
-        </div>
-    </header>
+    <h1 class="text-3xl font-bold text-center mb-8 text-white uppercase tracking-widest border-b border-white/10 pb-4">SIAM <span class="text-red-500">PREMIUM</span></h1>
 
-    <main class="max-w-6xl mx-auto p-4 mt-6">
-        <div id="tv-section">
-            <div class="grid lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2">
-                    <div class="flex justify-end mb-3">
-                        <a href="https://t.me/Mr_Ooliver" target="_blank" class="telegram-glow text-[10px] font-extrabold tracking-widest uppercase hover:scale-105 transition-transform">JOIN TELEGRAM</a>
-                    </div>
-                    <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                        <video id="iptv-player" class="w-full h-full" controls autoplay></video>
-                    </div>
-                    <h2 id="now-playing" class="mt-4 text-lg font-semibold text-white/80">Loading...</h2>
-                </div>
-                <div class="bg-white/5 p-4 rounded-3xl h-[500px] overflow-y-auto border border-white/5">
-                    <div id="category-tabs" class="flex gap-2 mb-4 overflow-x-auto pb-2"></div>
-                    <div id="channel-list" class="space-y-2"></div>
-                </div>
-            </div>
-        </div>
+    <!-- চ্যানেল গ্রিড -->
+    <div id="channel-grid" class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-4 max-w-6xl mx-auto"></div>
 
-        <div id="movie-section" class="hidden">
-            <div class="flex justify-end mb-3 mr-4">
-                <a href="https://t.me/Mr_Ooliver" target="_blank" class="telegram-glow text-[10px] font-extrabold tracking-widest uppercase hover:scale-105 transition-transform">JOIN TELEGRAM</a>
+    <!-- ভিডিও পপআপ (Modal) -->
+    <div id="video-modal" class="modal">
+        <div class="max-w-4xl w-full p-4 relative">
+            <button onclick="closeModal()" class="text-white text-3xl mb-2">&times; Close</button>
+            <div class="aspect-video bg-black rounded-xl overflow-hidden">
+                <video id="player" class="w-full h-full" controls autoplay></video>
             </div>
-            <div id="movie-player-box" class="hidden mb-8">
-                <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                    <video id="movie-player" class="w-full h-full" controls></video>
-                </div>
-            </div>
-            <div id="movie-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+            <h2 id="video-title" class="mt-4 text-xl font-bold"></h2>
         </div>
-    </main>
+    </div>
 
     <script>
-        let allChannels = [];
-        async function fetchData() {
-            try {
-                const res = await fetch('channels.json');
-                allChannels = await res.json();
-                renderUI();
-                renderCategories();
-                filterChannels('All');
-                
-                const first = allChannels.find(c => c.category !== 'Movies');
-                if(first) playTv(first.url, first.name);
-            } catch (e) { console.error("Error:", e); }
-        }
+        const data = [
+            {"id": 1, "name": "SONYLIV", "category": "Sports", "logo": "https://th.bing.com/th/id/OSK.ydk-X6QOMcWkwzfC6_EzY-J_nGnX_YyolDbOL6wyZHQ?w=50&h=50&c=12&o=6&pid=SANGAM", "url": "https://zubayerop.short.gy/PSG-V-ARS-ENG.m3u8"},
+            {"id": 2, "name": "DD Sports", "category": "Sports", "logo": "https://i.postimg.cc/7hVCMDyZ/dd-sports.jpg", "url": "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/b17adfe543354fdd8d189b110617cddd/index_3.m3u8"},
+            {"id": 3, "name": "Deepto TV", "category": "Entertainment", "logo": "https://i.postimg.cc/L6WP5g60/Deepto-TV.jpg", "url": "https://byphdgllyk.gpcdn.net/hls/deeptotv/index.m3u8"},
+            {"id": 4, "name": "Star Sports 1", "category": "Sports", "logo": "https://i.pinimg.com/736x/55/bc/a6/55bca6bbbd01df17b64a10376c172878.jpg", "url": "https://tvsen7.aynaott.com/sspts1/tracks-v1a1/mono.ts.m3u8"},
+            {"id": 5, "name": "sony max", "category": "Entertainment", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/SONY_MAX_Logo_2022.png/960px-SONY_MAX_Logo_2022.png", "url": "https://edge2.roarzone.net:8447/roarzone/edge3/sony_max/tracks-v1a1/mono.m3u8"},
+            {"id": 6, "name": "Sambhavam", "category": "Movies", "logo": "https://ftpbd.net/wp-content/uploads/2026/04/tBNSo4T0R8UztkkpjYkzXI4bFAT-288x400.jpg", "url": "https://www.ftpbd.net/wp-content/hls-file/Sambhavam-Adhyayam-Onnu-2026-Hindi-Dubbed-1080p-WEBDL_reencoded/index.m3u8"},
+            {"id": 7, "name": "T Sports", "category": "Sports", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/T_Sports_logo.svg/250px-T_Sports_logo.svg.png", "url": "https://tvsen7.aynaott.com/tsports-hd/tracks-v1a1/mono.ts.m3u8"},
+            {"id": 8, "name": "PTV Sports", "category": "Sports", "logo": "https://image.winudf.com/v2/image1/ZGV2X2ltYWdlXzI3MzM1OTk2XzIwNjc0NV8yMDIzMTAyMzA5NTQ0NDQ4MQ/icon.png?w=280&fakeurl=1", "url": "https://tvsen5.aynaott.com/PtvSports/tracks-v1a1/mono.ts.m3u8"},
+            {"id": 9, "name": "willow hd", "category": "Sports", "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Willow_Cricket.PNG/250px-Willow_Cricket.PNG", "url": "https://tvsen5.aynaott.com/willowhd/tracks-v1a1/mono.ts.m3u8"},
+            {"id": 10, "name": "Fox sports 2", "category": "Sports", "logo": "https://tse4.mm.bing.net/th/id/OIP.ryWH-4jZxM855eHjMPbnBgHaFA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "url": "https://tvsen7.aynaott.com/foxsports2/tracks-v1a1/mono.ts.m3u8"},
+            {"id": 11, "name": "ESPN", "category": "Sports", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/ESPN_wordmark.svg/250px-ESPN_wordmark.svg.png", "url": "https://tvsen5.aynaott.com/espn/tracks-v1a1/mono.ts.m3u8"},
+            {"id": 12, "name": "A sports", "category": "Sports", "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/A_Sports_Logo.png/250px-A_Sports_Logo.png", "url": "https://tvsen6.aynaott.com/asports/tracks-v1a1/mono.ts.m3u8"},
+            {"id": 13, "name": "sony sports 1", "category": "Sports", "logo": "https://carotvnepal.com.np/wp-content/uploads/2024/04/SONY-TEN-SPORTS-1-HD.png", "url": "https://edge2.roarzone.net:8447/roarzone/edge3/sony_sports_1_hd/tracks-v1a1/mono.m3u8"},
+            {"id": 14, "name": "sony sports 2", "category": "Sports", "logo": "https://assets.airtel.in/static-assets/cms/dth/images/logo-adapt-pages/SONY%20SPORTS%20TEN%202.jpg", "url": "https://edge2.roarzone.net:8447/roarzone/edge3/sony_sports_2_hd/tracks-v1a1/mono.m3u8"},
+            {"id": 15, "name": "sony sports 5", "category": "Sports", "logo": "https://www.sonypicturesnetworks.com/images/logos/SONY_SportsTen5_SD_Logo_CLR.png", "url": "https://edge2.roarzone.net:8447/roarzone/edge3/sony_sports_5_hd/tracks-v1a1/mono.m3u8"},
+            {"id": 16, "name": "ten cricket", "category": "Sports", "logo": "https://tse1.mm.bing.net/th/id/OIP._8gSEt6bXg3fuRX5R3MmpwAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "url": "https://edge2.roarzone.net:8447/roarzone/edge3/ten_cricket/tracks-v1a1/mono.m3u8"},
+            {"id": 17, "name": "TSN 1", "category": "Sports", "logo": "https://th.bing.com/th/id/R.0758aa23cae84629c44e08102d13193d?rik=aRaKy0pilbPdhA&riu=http%3a%2f%2fwww.nrtco.net%2fsites%2fdefault%2ffiles%2fimg%2ftsn1.png&ehk=YebU5DYgUfFK2z%2boI2%2fiyH8gZvLHSgDvzqCXOomG3EM%3d&risl=&pid=ImgRaw&r=0", "url": "https://tvsen7.aynaott.com/tsn1/tracks-v1a1/mono.ts.m3u8"},
+            {"id": 18, "name": "TSN 2", "category": "Sports", "logo": "https://tse2.mm.bing.net/th/id/OIP.krfdH6WbaT6LqNG55axnFwAAAA?r=0&w=250&h=250&rs=1&pid=ImgDetMain&o=7&rm=3", "url": "https://tvsen7.aynaott.com/tsn2/tracks-v1a1/mono.ts.m3u8"},
+            {"id": 19, "name": "TSN 3", "category": "Sports", "logo": "https://th.bing.com/th/id/R.deb06b18a2f6a058ef8fa41b642430cd?rik=1pPQwAJilwEn0w&riu=http%3a%2f%2fwww.nrtccommunications.net%2fsites%2fdefault%2ffiles%2fimg%2ftsn3.png&ehk=p2xWWrvBAjRzDGnxf1lenB%2fidaHxRn2LcVd0FIlxDcw%3d&risl=&pid=ImgRaw&r=0", "url": "https://tvsen7.aynaott.com/tsn3/tracks-v1a1/mono.ts.m3u8"},
+            {"id": 20, "name": "golf channel", "category": "Sports", "logo": "https://tse4.mm.bing.net/th/id/OIP.if7Z7MngkWlMcEleGSeX7QHaCO?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "url": "https://tvsen6.aynaott.com/golfchannel/tracks-v1a1/mono.ts.m3u8"},
+            {"id": 21, "name": "euro sports hd", "category": "Sports", "logo": "https://tse3.mm.bing.net/th/id/OIP.f54O7lyRXC_0b3nrWKXqaQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "url": "https://stream.ottplus.bd/live/euro_sports_hd_abr/live/euro_sports_hd/chunks.m3u8"},
+            {"id": 22, "name": "beinsports xtra", "category": "Sports", "logo": "https://th.bing.com/th/id/OIP.1-7a9uTgwIvzKBmmGDsYTAHaEH?w=282&h=180&c=7&r=0&o=7&pid=1.7&rm=3", "url": "https://bein-esp-xumo.amagi.tv/playlistR720P.m3u8"},
+            {"id": 23, "name": "Rakkhosh", "category": "Movies", "logo": "https://i.imgbd.org/poster_im9v1779295428.jpg", "url": "https://play.movielinkbd.mom/watch/ApJwPnWnEAyO_XrG.v_wYsqUm4Qzkh4dPc-qFftWgdxsvG5euBZMX9EFXy5XZo1ydNQC9nDywClncfrGB4Viq0mOSUUvH.PKaDfPycsZWC1nL8J2iURw"},
+            {"id": 24, "name": "Prince", "category": "Movies", "logo": "https://image.tmdb.org/t/p/original/1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg", "url": "https://play.movielinkbd.mom/watch/YcsJNBt8q7FtLLoO.SyqA0wS_8FMtM2kQ7bHpG6JhOsOBfU8La3509gSsjCbI2TBhT3nmqOMX8kpVkUTpRkXnVkPS5vWH.hXFxqCF3C9j_1iUbZgBRYQ"},
+            {"id": 25, "name": "Domm", "category": "Movies", "logo": "https://i.imgbd.org/poster_199j1779281825.jpg", "url": "https://play.movielinkbd.mom/watch/SNhSFSUOV9FQP66U.5Z7TyFdC0-t6n-dvCrPCmrl30zw-KrQ7URTTYmuoK3OjHo-edH14vqcHEkRgP2KY2BNiwIwGm0CB.LFjsl8kq0-Q5m_CWAR0oPw"}
+        ];
 
-        function renderCategories() {
-            const cats = ['All', ...new Set(allChannels.filter(c => c.category !== 'Movies').map(c => c.category))];
-            document.getElementById('category-tabs').innerHTML = cats.map(cat => 
-                `<button onclick="filterChannels('${cat}')" class="px-3 py-1 bg-white/10 rounded-lg text-[10px] uppercase font-bold hover:bg-red-600 transition">${cat}</button>`
-            ).join('');
-        }
+        let hls = null;
 
-        function filterChannels(cat) {
-            const list = document.getElementById('channel-list');
-            const filtered = cat === 'All' ? allChannels.filter(c => c.category !== 'Movies') : allChannels.filter(c => c.category === cat);
-            list.innerHTML = filtered.map(c => `
-                <div onclick="playTv('${c.url}', '${c.name}')" class="p-3 bg-white/5 hover:bg-red-600/20 rounded-xl cursor-pointer flex items-center gap-3 transition border border-white/5">
-                    <img src="${c.logo}" class="w-8 h-8 rounded-lg object-cover" onerror="this.style.display='none'">
-                    <span class="text-sm font-medium">${c.name}</span>
+        function renderGrid() {
+            const grid = document.getElementById('channel-grid');
+            grid.innerHTML = data.map(c => `
+                <div class="channel-card" onclick="openModal('${c.url}', '${c.name}')">
+                    <img src="${c.logo}" class="w-16 h-16 object-contain mb-2">
+                    <span class="text-[10px] font-bold text-center uppercase">${c.name}</span>
                 </div>
             `).join('');
         }
 
-        function renderUI() {
-            document.getElementById('movie-grid').innerHTML = allChannels.filter(c => c.category === 'Movies').map(m => `
-                <div onclick="playMovie('${m.url}', '${m.name}')" class="movie-card bg-white/5 rounded-2xl overflow-hidden cursor-pointer border border-white/5">
-                    <img src="${m.logo}" class="w-full aspect-[2/3] object-cover">
-                    <div class="p-3"><p class="text-xs font-bold truncate">${m.name}</p></div>
-                </div>
-            `).join('');
-        }
-
-        function switchTab(tab) {
-            const tvSection = document.getElementById('tv-section');
-            const movieSection = document.getElementById('movie-section');
-            const tvPlayer = document.getElementById('iptv-player');
-            const moviePlayer = document.getElementById('movie-player');
-            const tvBtn = document.getElementById('tv-tab');
-            const movieBtn = document.getElementById('movie-tab');
-
-            if(tab === 'tv') {
-                tvSection.classList.remove('hidden');
-                movieSection.classList.add('hidden');
-                moviePlayer.pause();
-                tvBtn.classList.add('bg-red-600'); 
-                movieBtn.classList.remove('bg-red-600');
-            } else {
-                tvSection.classList.add('hidden');
-                movieSection.classList.remove('hidden');
-                tvPlayer.pause();
-                movieBtn.classList.add('bg-red-600'); 
-                tvBtn.classList.remove('bg-red-600');
-            }
-        }
-
-        function playTv(url, name) {
-            document.getElementById('now-playing').innerText = "Playing: " + name;
-            const video = document.getElementById('iptv-player');
-            if(Hls.isSupported()){ const hls = new Hls(); hls.loadSource(url); hls.attachMedia(video); hls.play(); }
-            else { video.src = url; video.play(); }
-        }
-
-        function playMovie(url, name) {
-            document.getElementById('movie-player-box').classList.remove('hidden');
-            const video = document.getElementById('movie-player');
-            video.src = url;
+        function openModal(url, name) {
+            document.getElementById('video-modal').style.display = 'flex';
+            document.getElementById('video-title').innerText = name;
+            const video = document.getElementById('player');
+            if (hls) hls.destroy();
+            hls = new Hls();
+            hls.loadSource(url);
+            hls.attachMedia(video);
             video.play();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        fetchData();
+
+        function closeModal() {
+            document.getElementById('video-modal').style.display = 'none';
+            document.getElementById('player').pause();
+        }
+
+        renderGrid();
     </script>
 </body>
 </html>
