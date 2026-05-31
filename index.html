@@ -7,52 +7,33 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; background: #050505; color: white; }
         .glass { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .gradient-text { background: linear-gradient(90deg, #ef4444, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .telegram-glow { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
-        .movie-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2); }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #ef4444; border-radius: 10px; }
+        .movie-card:hover { transform: translateY(-8px); transition: 0.3s; }
     </style>
 </head>
-<body class="antialiased">
+<body>
 
     <!-- হেডার -->
     <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-white/10">
-        <h1 class="text-2xl font-black tracking-tighter text-white">SIAM<span class="gradient-text">PREMIUM</span></h1>
+        <h1 class="text-2xl font-black text-white">SIAM<span class="text-red-500">PREMIUM</span></h1>
         <div class="flex gap-2">
-            <button onclick="switchTab('tv')" id="tv-tab" class="px-5 py-2 bg-red-600 rounded-full text-xs font-bold transition">LIVE TV</button>
-            <button onclick="switchTab('movies')" id="movie-tab" class="px-5 py-2 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition">MOVIES</button>
+            <button onclick="switchTab('tv')" id="tv-tab" class="px-5 py-2 bg-red-600 rounded-full text-xs font-bold">LIVE TV</button>
+            <button onclick="switchTab('movies')" id="movie-tab" class="px-5 py-2 bg-white/10 rounded-full text-xs font-bold">MOVIES</button>
         </div>
     </header>
-
-    <!-- আইপিএল নোটিশ -->
-    <div class="max-w-4xl mx-auto mt-6 px-4">
-        <div class="bg-gradient-to-r from-red-600 to-orange-600 p-4 rounded-2xl shadow-lg shadow-red-600/20 text-center animate-pulse">
-            <h2 class="text-xl font-black tracking-tight text-white uppercase">🔥 IPL Grand Finale Tonight at 8:00 PM!</h2>
-            <p class="text-white/90 text-sm font-medium">মিছ করবেন না, সাইয়াম প্রিমিয়ামে দেখুন সরাসরি!</p>
-        </div>
-    </div>
 
     <main class="max-w-6xl mx-auto p-4 mt-6">
         <!-- TV Section -->
         <div id="tv-section">
             <div class="grid lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2">
-                    <div class="relative group">
-                        <div class="absolute top-4 left-4 z-20 flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-                            <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span></span>
-                            <span class="text-[9px] font-black tracking-widest text-white uppercase">Live Now</span>
-                        </div>
-                        <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative">
-                            <video id="iptv-player" class="w-full h-full" controls autoplay></video>
-                        </div>
+                    <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10">
+                        <video id="iptv-player" class="w-full h-full" controls autoplay></video>
                     </div>
-                    <h2 id="now-playing" class="mt-4 text-lg font-semibold text-white/80">Select a channel to watch</h2>
                 </div>
-                <div class="bg-white/5 p-4 rounded-3xl h-[500px] overflow-y-auto border border-white/5">
+                <div class="bg-white/5 p-4 rounded-3xl h-[500px] overflow-y-auto">
                     <div id="channel-list" class="space-y-2"></div>
                 </div>
             </div>
@@ -60,8 +41,8 @@
 
         <!-- Movie Section -->
         <div id="movie-section" class="hidden">
-            <div id="movie-player-box" class="hidden mb-8">
-                <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+            <div id="movie-player-container" class="hidden mb-6">
+                <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10">
                     <video id="movie-player" class="w-full h-full" controls></video>
                 </div>
             </div>
@@ -73,39 +54,69 @@
         let allChannels = [];
         let hls = null;
 
-        // ট্যাব পরিবর্তনের লজিক
+        async function fetchData() {
+            try {
+                const res = await fetch('channels.json');
+                allChannels = await res.json();
+                
+                // চ্যানেল এবং মুভি রেন্ডার করা
+                renderChannels();
+                renderMovies();
+            } catch (e) { console.error("Error:", e); }
+        }
+
         function switchTab(tab) {
-            const tvSection = document.getElementById('tv-section');
-            const movieSection = document.getElementById('movie-section');
-            const tvPlayer = document.getElementById('iptv-player');
-            const moviePlayer = document.getElementById('movie-player');
+            const tvSec = document.getElementById('tv-section');
+            const movSec = document.getElementById('movie-section');
+            const tvP = document.getElementById('iptv-player');
+            const movP = document.getElementById('movie-player');
+            const movBox = document.getElementById('movie-player-container');
 
             if(tab === 'tv') {
-                moviePlayer.pause(); moviePlayer.src = ""; // মুভি প্লেয়ার বন্ধ করা
-                document.getElementById('movie-player-box').classList.add('hidden');
-                tvSection.classList.remove('hidden'); movieSection.classList.add('hidden');
-                document.getElementById('tv-tab').classList.add('bg-red-600'); document.getElementById('movie-tab').classList.remove('bg-red-600');
+                movP.pause(); movP.src = ""; movBox.classList.add('hidden');
+                tvSec.classList.remove('hidden'); movSec.classList.add('hidden');
+                document.getElementById('tv-tab').className = "px-5 py-2 bg-red-600 rounded-full text-xs font-bold";
+                document.getElementById('movie-tab').className = "px-5 py-2 bg-white/10 rounded-full text-xs font-bold";
             } else {
-                tvPlayer.pause(); if(hls) hls.destroy(); // টিভি প্লেয়ার বন্ধ করা
-                tvSection.classList.add('hidden'); movieSection.classList.remove('hidden');
-                document.getElementById('movie-tab').classList.add('bg-red-600'); document.getElementById('tv-tab').classList.remove('bg-red-600');
+                tvP.pause(); if(hls) hls.destroy();
+                tvSec.classList.add('hidden'); movSec.classList.remove('hidden');
+                document.getElementById('movie-tab').className = "px-5 py-2 bg-red-600 rounded-full text-xs font-bold";
+                document.getElementById('tv-tab').className = "px-5 py-2 bg-white/10 rounded-full text-xs font-bold";
             }
         }
 
         function playTv(url, name) {
-            document.getElementById('now-playing').innerText = "Playing: " + name;
             const video = document.getElementById('iptv-player');
             if(hls) hls.destroy();
             if(Hls.isSupported()){ hls = new Hls(); hls.loadSource(url); hls.attachMedia(video); hls.play(); }
+            else { video.src = url; video.play(); }
         }
 
-        function playMovie(url, name) {
-            document.getElementById('movie-player-box').classList.remove('hidden');
+        function playMovie(url) {
+            document.getElementById('movie-player-container').classList.remove('hidden');
             const video = document.getElementById('movie-player');
             video.src = url; video.play();
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // বাকি ডাটা ফেচিং এবং রেন্ডারিং লজিক এখানে থাকবে...
+        function renderChannels() {
+            const list = document.getElementById('channel-list');
+            list.innerHTML = allChannels.filter(c => c.category !== 'Movies').map(c => `
+                <div onclick="playTv('${c.url}', '${c.name}')" class="p-3 bg-white/5 hover:bg-red-600 rounded-xl cursor-pointer">${c.name}</div>
+            `).join('');
+        }
+
+        function renderMovies() {
+            const grid = document.getElementById('movie-grid');
+            grid.innerHTML = allChannels.filter(c => c.category === 'Movies').map(m => `
+                <div onclick="playMovie('${m.url}')" class="movie-card bg-white/5 p-2 rounded-xl cursor-pointer">
+                    <img src="${m.logo}" class="w-full aspect-[2/3] object-cover rounded-lg">
+                    <p class="mt-2 text-xs font-bold truncate">${m.name}</p>
+                </div>
+            `).join('');
+        }
+
+        fetchData();
     </script>
 </body>
 </html>
