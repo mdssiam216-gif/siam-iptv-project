@@ -23,8 +23,6 @@
     <!-- হেডার -->
     <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-white/10">
         <h1 class="text-2xl font-bold tracking-tighter text-white">SIAM<span class="gradient-text">PREMIUM</span></h1>
-        <!-- লাইভ ঘড়ি -->
-        <div id="live-clock" class="text-white font-mono text-sm font-bold bg-white/10 px-3 py-1 rounded-full">00:00:00</div>
         <div class="flex gap-2">
             <button onclick="switchTab('tv')" id="tv-tab" class="px-5 py-2 bg-red-600 rounded-full text-xs font-bold transition">LIVE TV</button>
             <button onclick="switchTab('movies')" id="movie-tab" class="px-5 py-2 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold transition">MOVIES</button>
@@ -81,18 +79,10 @@
     </main>
 
     <script>
-        // লাইভ ঘড়ি লজিক
-        function updateClock() {
-            const now = new Date();
-            document.getElementById("live-clock").innerText = now.toLocaleTimeString();
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // আগের সব লজিক এখানে থাকবে...
         let allChannels = [];
         let hls = null;
 
+        // টাইমার লজিক
         const countDownDate = new Date("May 31, 2026 20:00:00").getTime();
         const x = setInterval(function() {
             const now = new Date().getTime();
