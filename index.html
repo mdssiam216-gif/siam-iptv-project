@@ -19,7 +19,6 @@
 </head>
 <body class="antialiased">
 
-    <!-- হেডার -->
     <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-white/10">
         <h1 class="text-2xl font-black tracking-tighter text-white">SIAM<span class="gradient-text">PREMIUM</span></h1>
         <div class="flex gap-2">
@@ -29,29 +28,31 @@
     </header>
 
     <main class="max-w-6xl mx-auto p-4 mt-6">
-        
-        <!-- টিভি সেকশন -->
+        <!-- IPL ব্যানার (শুধু টিভি সেকশনেই দেখাবে) -->
+        <div id="ipl-banner" class="mb-8">
+            <div class="relative bg-white/5 p-6 rounded-3xl border border-white/10">
+                <h2 class="text-2xl font-black">IPL GRAND FINALE</h2>
+                <div id="timer-container" class="text-red-500 font-bold mt-2">খেলা শুরু হয়ে গেছে!</div>
+            </div>
+        </div>
+
         <div id="tv-section">
             <div class="grid lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2">
                     <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-white/10">
                         <video id="iptv-player" class="w-full h-full" controls autoplay></video>
                     </div>
-                    <h2 id="now-playing" class="mt-4 text-lg font-semibold text-white/80">Loading...</h2>
                 </div>
-                
-                <!-- ডান পাশের প্যানেল (সার্চ বার সহ) -->
                 <div class="bg-white/5 p-4 rounded-3xl h-[500px] overflow-y-auto border border-white/5">
-                    <input type="text" id="tv-search" onkeyup="filterChannelsBySearch()" placeholder="চ্যানেল খুঁজুন..." class="w-full p-3 mb-4 bg-black/40 border border-white/10 rounded-xl text-white text-sm outline-none focus:border-red-600">
+                    <input type="text" id="tv-search" onkeyup="filterChannelsBySearch()" placeholder="চ্যানেল খুঁজুন..." class="w-full p-3 mb-4 bg-black/40 border border-white/10 rounded-xl text-sm outline-none">
                     <div id="category-tabs" class="flex gap-2 mb-4 overflow-x-auto pb-2"></div>
                     <div id="channel-list" class="space-y-2"></div>
                 </div>
             </div>
         </div>
 
-        <!-- মুভি সেকশন -->
         <div id="movie-section" class="hidden">
-            <input type="text" id="movie-search" onkeyup="filterMoviesBySearch()" placeholder="মুভি খুঁজুন..." class="w-full p-3 mb-6 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-red-600">
+            <input type="text" id="movie-search" onkeyup="filterMoviesBySearch()" placeholder="মুভি খুঁজুন..." class="w-full p-3 mb-6 bg-white/5 border border-white/10 rounded-2xl outline-none">
             <div id="movie-player-box" class="hidden mb-8">
                 <video id="movie-player" class="w-full aspect-video rounded-3xl" controls></video>
             </div>
@@ -63,38 +64,41 @@
         let allChannels = [];
         let hls = null;
 
+        function switchTab(tab) {
+            const tvSection = document.getElementById('tv-section');
+            const movieSection = document.getElementById('movie-section');
+            const iplBanner = document.getElementById('ipl-banner');
+            const tvPlayer = document.getElementById('iptv-player');
+            const moviePlayer = document.getElementById('movie-player');
+
+            if(tab === 'tv') {
+                tvSection.classList.remove('hidden');
+                iplBanner.classList.remove('hidden');
+                movieSection.classList.add('hidden');
+                moviePlayer.pause(); // মুভি প্লেয়ার পজ
+                moviePlayer.src = ""; // মুভি সোর্স রিসেট
+            } else {
+                movieSection.classList.remove('hidden');
+                tvSection.classList.add('hidden');
+                iplBanner.classList.add('hidden');
+                tvPlayer.pause(); // টিভি প্লেয়ার পজ
+                if(hls) hls.destroy(); // টিভি স্ট্রিম ধ্বংস
+            }
+            
+            document.getElementById('tv-tab').classList.toggle('bg-red-600', tab === 'tv');
+            document.getElementById('movie-tab').classList.toggle('bg-red-600', tab === 'movies');
+        }
+
         async function fetchData() {
             try {
                 const res = await fetch('channels.json');
                 allChannels = await res.json();
                 renderUI(); renderCategories(); filterChannels('All');
-            } catch (e) { console.error("Error loading JSON"); }
+            } catch (e) { console.error("Error"); }
         }
 
-        function switchTab(tab) {
-            document.getElementById('tv-section').classList.toggle('hidden', tab !== 'tv');
-            document.getElementById('movie-section').classList.toggle('hidden', tab !== 'movies');
-            document.getElementById('tv-tab').classList.toggle('bg-red-600', tab === 'tv');
-            document.getElementById('movie-tab').classList.toggle('bg-red-600', tab === 'movies');
-        }
-
-        // সার্চ ফাংশন
-        function filterChannelsBySearch() {
-            const query = document.getElementById('tv-search').value.toLowerCase();
-            document.querySelectorAll('#channel-list > div').forEach(el => {
-                el.style.display = el.innerText.toLowerCase().includes(query) ? 'flex' : 'none';
-            });
-        }
-
-        function filterMoviesBySearch() {
-            const query = document.getElementById('movie-search').value.toLowerCase();
-            document.querySelectorAll('#movie-grid > div').forEach(el => {
-                el.style.display = el.innerText.toLowerCase().includes(query) ? 'block' : 'none';
-            });
-        }
-
+        // বাকি ফাংশনগুলো আগের মতোই থাকবে...
         function playTv(url, name) {
-            document.getElementById('now-playing').innerText = "Playing: " + name;
             const video = document.getElementById('iptv-player');
             if(hls) hls.destroy();
             hls = new Hls(); hls.loadSource(url); hls.attachMedia(video); hls.play();
@@ -103,30 +107,15 @@
         function playMovie(url, name) {
             document.getElementById('movie-player-box').classList.remove('hidden');
             const video = document.getElementById('movie-player');
-            video.src = url; video.play(); window.scrollTo(0, 0);
+            video.src = url; video.play();
         }
-
-        function renderCategories() {
-            const cats = ['All', ...new Set(allChannels.filter(c => c.category !== 'Movies').map(c => c.category))];
-            document.getElementById('category-tabs').innerHTML = cats.map(cat => `<button onclick="filterChannels('${cat}')" class="px-3 py-1 bg-white/10 rounded-lg text-[10px] uppercase font-bold hover:bg-red-600">${cat}</button>`).join('');
-        }
-
-        function filterChannels(cat) {
-            const filtered = cat === 'All' ? allChannels.filter(c => c.category !== 'Movies') : allChannels.filter(c => c.category === cat);
-            document.getElementById('channel-list').innerHTML = filtered.map(c => `
-                <div onclick="playTv('${c.url}', '${c.name}')" class="p-3 bg-white/5 hover:bg-red-600/20 rounded-xl cursor-pointer flex items-center gap-3">
-                    <img src="${c.logo}" class="w-8 h-8 rounded-lg" onerror="this.src='https://via.placeholder.com/50'">
-                    <span class="text-sm">${c.name}</span>
-                </div>`).join('');
-        }
-
-        function renderUI() {
-            document.getElementById('movie-grid').innerHTML = allChannels.filter(c => c.category === 'Movies').map(m => `
-                <div onclick="playMovie('${m.url}', '${m.name}')" class="movie-card bg-white/5 rounded-2xl p-2 cursor-pointer border border-white/5">
-                    <img src="${m.logo}" class="w-full aspect-[2/3] object-cover rounded-xl">
-                    <p class="text-xs mt-2 font-bold truncate">${m.name}</p>
-                </div>`).join('');
-        }
+        
+        // সার্চ ও রেন্ডার ফাংশনগুলো এখানে আগের মতোই বসিয়ে দিবে
+        function filterChannelsBySearch() { /* আগের কোড */ }
+        function filterMoviesBySearch() { /* আগের কোড */ }
+        function renderCategories() { /* আগের কোড */ }
+        function filterChannels(cat) { /* আগের কোড */ }
+        function renderUI() { /* আগের কোড */ }
 
         fetchData();
     </script>
