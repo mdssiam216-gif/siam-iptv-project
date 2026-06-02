@@ -9,50 +9,52 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.05); }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid #e2e8f0; }
         .gradient-text { background: linear-gradient(90deg, #ef4444, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .telegram-glow { color: #ea580c; font-weight: 800; }
         .movie-card { transition: all 0.3s ease; background: white; border: 1px solid #e2e8f0; }
-        .movie-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.1); }
+        .movie-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.15); }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #ef4444; border-radius: 10px; }
     </style>
 </head>
 <body class="antialiased">
 
-    <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-gray-200">
+    <header class="glass sticky top-0 z-50 p-4 flex justify-between items-center">
         <h1 class="text-2xl font-bold tracking-tighter text-gray-900">SIAM<span class="gradient-text">PREMIUM</span></h1>
         <div class="flex gap-2">
             <button onclick="switchTab('tv')" id="tv-tab" class="px-5 py-2 bg-red-600 text-white rounded-full text-xs font-bold transition">LIVE TV</button>
-            <button onclick="switchTab('movies')" id="movie-tab" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-xs font-bold transition">MOVIES</button>
+            <button onclick="switchTab('movies')" id="movie-tab" class="px-5 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-full text-xs font-bold transition">MOVIES</button>
         </div>
     </header>
 
     <main class="max-w-6xl mx-auto p-4 mt-6">
+        <!-- TV Section -->
         <div id="tv-section">
             <div class="grid lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2">
                     <div class="flex justify-end mb-3">
                         <a href="https://t.me/Mr_Ooliver" target="_blank" class="telegram-glow text-[10px] tracking-widest uppercase hover:underline">JOIN TELEGRAM</a>
                     </div>
-                    <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-gray-200 shadow-2xl">
+                    <div class="aspect-video bg-gray-900 rounded-3xl overflow-hidden shadow-2xl">
                         <video id="iptv-player" class="w-full h-full" controls autoplay></video>
                     </div>
                     <h2 id="now-playing" class="mt-4 text-lg font-semibold text-gray-800">Loading...</h2>
                 </div>
-                <div class="bg-white p-4 rounded-3xl h-[500px] overflow-y-auto border border-gray-200 shadow-sm">
+                <div class="bg-white p-4 rounded-3xl h-[500px] overflow-y-auto border border-gray-100 shadow-sm">
                     <div id="category-tabs" class="flex gap-2 mb-4 overflow-x-auto pb-2"></div>
                     <div id="channel-list" class="space-y-2"></div>
                 </div>
             </div>
         </div>
 
+        <!-- Movie Section -->
         <div id="movie-section" class="hidden">
             <div class="flex justify-end mb-3 mr-4">
                 <a href="https://t.me/Mr_Ooliver" target="_blank" class="telegram-glow text-[10px] tracking-widest uppercase hover:underline">JOIN TELEGRAM</a>
             </div>
             <div id="movie-player-box" class="hidden mb-8">
-                <div class="aspect-video bg-black rounded-3xl overflow-hidden border border-gray-200 shadow-2xl">
+                <div class="aspect-video bg-gray-900 rounded-3xl overflow-hidden shadow-2xl">
                     <video id="movie-player" class="w-full h-full" controls></video>
                 </div>
             </div>
@@ -69,7 +71,6 @@
                 renderUI();
                 renderCategories();
                 filterChannels('All');
-                
                 const first = allChannels.find(c => c.category !== 'Movies');
                 if(first) playTv(first.url, first.name);
             } catch (e) { console.error("Error:", e); }
@@ -86,7 +87,7 @@
             const list = document.getElementById('channel-list');
             const filtered = cat === 'All' ? allChannels.filter(c => c.category !== 'Movies') : allChannels.filter(c => c.category === cat);
             list.innerHTML = filtered.map(c => `
-                <div onclick="playTv('${c.url}', '${c.name}')" class="p-3 bg-gray-50 hover:bg-red-600/10 rounded-xl cursor-pointer flex items-center gap-3 transition border border-gray-100">
+                <div onclick="playTv('${c.url}', '${c.name}')" class="p-3 bg-white hover:bg-red-50 rounded-xl cursor-pointer flex items-center gap-3 transition border border-gray-100">
                     <img src="${c.logo}" class="w-8 h-8 rounded-lg object-cover" onerror="this.style.display='none'">
                     <span class="text-sm font-medium text-gray-700">${c.name}</span>
                 </div>
@@ -114,16 +115,14 @@
                 tvSection.classList.remove('hidden');
                 movieSection.classList.add('hidden');
                 moviePlayer.pause();
-                tvBtn.classList.add('bg-red-600', 'text-white'); 
-                movieBtn.classList.remove('bg-red-600', 'text-white');
-                movieBtn.classList.add('bg-gray-200');
+                tvBtn.className = "px-5 py-2 bg-red-600 text-white rounded-full text-xs font-bold transition";
+                movieBtn.className = "px-5 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-full text-xs font-bold transition";
             } else {
                 tvSection.classList.add('hidden');
                 movieSection.classList.remove('hidden');
                 tvPlayer.pause();
-                movieBtn.classList.add('bg-red-600', 'text-white'); 
-                tvBtn.classList.remove('bg-red-600', 'text-white');
-                tvBtn.classList.add('bg-gray-200');
+                movieBtn.className = "px-5 py-2 bg-red-600 text-white rounded-full text-xs font-bold transition";
+                tvBtn.className = "px-5 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-full text-xs font-bold transition";
             }
         }
 
