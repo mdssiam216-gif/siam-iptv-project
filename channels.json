@@ -302,22 +302,8 @@
 
     "logo": "https://th.bing.com/th/id/OIP.1-7a9uTgwIvzKBmmGDsYTAHaEH?w=282&h=180&c=7&r=0&o=7&pid=1.7&rm=3",
 
-    "url": "https://bein-esp-xumo.amagi.tv/playlistR720P.m3u8"
-
-  },
-
-  {
-
-    "id": 23,
-
-    "name": "Rakkhosh",
-
-    "category": "Movies",
-
-    "logo": "https://i.imgbd.org/poster_im9v1779295428.jpg",
-
-    "url": "https://play.movielinkbd.mom/watch/ApJwPnWnEAyO_XrG.v_wYsqUm4Qzkh4dPc-qFftWgdxsvG5euBZMX9EFXy5XZo1ydNQC9nDywClncfrGB4Viq0mOSUUvH.PKaDfPycsZWC1nL8J2iURw"
-
+    "url": "https://bein-esp-xumo.amagi.tv/playlistR720P.m3u8
+    
   },
 
   {
@@ -330,22 +316,9 @@
 
     "logo": "https://image.tmdb.org/t/p/original/7BYIUIrpdSkz89DTkY5NhaP9Mf5.jpg",
 
-    "url": "https://play.movielinkbd.mom/watch/VyBczfaxAEgzyc1c.0rLVV4shgqr0jyzlwmtZrDQo1lvt_ZQQjQNzC9bJIIH5pGoFQIW0-jDMtcXX4rvJnNhC4oN7pPsb.tXtaYaM6nTQAav59SKFkAw"
+    "url": "https://play.movielinkbd.mom/watch/VyBczfaxAEgzyc1c.0rLVV4shgqr0jyzlwmtZrDQo1lvt_ZQQjQNzC9bJIIH5pGoFQIW0-jDMtcXX4rvJnNhC4oN7pPsb.tXtaYaM6nTQAav59SKFkA
 
-  },
-
-  {
-
-    "id": 25,
-
-    "name": "Domm",
-
-    "category": "Movies",
-
-    "logo": "https://i.imgbd.org/poster_199j1779281825.jpg",
-
-    "url": "https://play.movielinkbd.mom/watch/SNhSFSUOV9FQP66U.5Z7TyFdC0-t6n-dvCrPCmrl30zw-KrQ7URTTYmuoK3OjHo-edH14vqcHEkRgP2KY2BNiwIwGm0CB.LFjsl8kq0-Q5m_CWAR0oPw"
-
+  
   }
 
 ]
