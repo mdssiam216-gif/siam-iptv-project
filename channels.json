@@ -4,13 +4,13 @@
 
     "id": 1,
 
-    "name": "Somoy TV",
+    "name": "bein sports 1",
 
     "category": "Sports",
 
-    "logo": "https://tstatic.akash-go.com/cms-ui/images/custom-content/1735560559088.png",
+    "logo": "https://commons.wikimedia.org/wiki/Special:FilePath/Logo%20beIN%20SPORTS%201.png",
 
-    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8"
+    "url": "https://fifa.moonx.dev/api/live/hls/bein-sports-1/master.m3u8"
 
   },
 
